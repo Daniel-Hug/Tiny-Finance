@@ -1,0 +1,88 @@
+.box {
+  margin: 1.5em 0;
+}
+.pull-right {
+  float: right;
+}
+body {
+  overflow-y: scroll;
+  font: normal 16px/1.2 sans-serif;
+  margin: 8px 0 0;
+  background: white;
+}
+/* Add income/payment Forms */
+.transaction-forms {
+  margin: 0 8px;
+}
+.transaction-forms .panel {
+  border: 1px solid #ccc;
+  padding: 1em;
+}
+.field-row {
+  margin-top: 1em;
+}
+.field-row:first-child {
+  margin-top: 0;
+}
+input[size=6] {
+  width: 96px;
+}
+/* Data table */
+.data-stage .btns {
+  margin: 0 8px;
+  text-align: right;
+}
+.data-stage,
+.graph {
+  width: 100%;
+  height: 500px;
+}
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.transactions-table tr {
+  border-top: 1px solid #ccc;
+}
+.transactions-table td,
+.transactions-table th {
+  padding: 8px;
+  white-space: nowrap;
+}
+.transactions-table th {
+  font-weight: normal;
+  font-size: 1.2em;
+}
+.transactions-table td:first-child {
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+}
+.transactions-table tbody td:last-child {
+  width: 16px;
+  /* delete button */
+
+}
+.transactions-table tbody td:last-child .delete {
+  display: inline-block;
+  border: 0;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 50%;
+  color: white;
+  background: black;
+  box-shadow: none;
+  text-shadow: none;
+  cursor: pointer;
+  opacity: .25;
+}
+.transactions-table tbody td:last-child .delete:hover {
+  opacity: .5;
+}
+.transactions-table tbody td:last-child .delete:before {
+  content: '×';
+}

@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+	
+<head>
+	<meta charset=utf-8>
+	<meta name=viewport content="width=device-width">
+	<title>Tiny Finance</title>
+	
+	<!-- Fat UI CSS -->
+	<link rel="stylesheet" href="http://daniel-hug.github.io/FatUI/FatUI.css">
+
+	<!-- Tabbed Panels CSS -->
+	<link rel="stylesheet" href="http://daniel-hug.github.io/tabbed-panels/panels.css">
+
+	<!-- App CSS -->
+	<link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+	<!-- Add income/payment Forms -->
+	<div class="transaction-forms tabbed-panels active closeable">
+		<div class="btns">
+			<button class="tab">Add Income</button>
+			<button class="tab active pull-right">Add Payment</button>
+		</div>
+		<form class="panel grid income-form">
+			<label for="income-name-field" class="field-row grid-u-1">
+				Title
+				<input class="grid-u-1" type="text" name='title' placeholder="Salary, chores, etc." required>
+			</label>
+			<label class="field-row grid-u-3-5 gutter">
+				Date
+				<input class="grid-u-1" type="date" name='date'>
+			</label>
+			<label class="field-row grid-u-2-5">
+				How Much
+				<span class="unit">$</span>
+				<input class="grid-u-1" type="number" name="amount" min="0" step=".01" size="6" maxlength="7" placeholder="0.00" required>
+			</label>
+			<div class="field-row grid-u-1">
+				<button class="grid-u-1" type="submit">Add</button>
+			</div>
+		</form>
+		<form class="panel active grid payment-form">
+			<label class="field-row grid-u-1">
+				Title
+				<input class="grid-u-1" type="text" name="title" placeholder="What is the payment for?" required>
+			</label>
+			<label class="field-row grid-u-3-5 gutter">
+				Date
+				<input  class="grid-u-1" type="date" name="date">
+			</label>
+			<label class="field-row grid-u-2-5">
+				Cost
+				<span class="unit negative">-$</span>
+				<input class="grid-u-1" type="number" name="amount" min="0" step=".01" size="6" maxlength="7" placeholder="0.00" required>
+			</label>
+			<div class="field-row">
+				<button class="grid-u-1" type="submit">Add</button>
+			</div>
+		</form>
+	</div>
+
+	<!-- Data visualizations -->
+	<div class="data-stage tabbed-panels box active">
+		<div class="btns">
+			<button class="tab active">table</button>
+			<button class="tab">graph</button>
+		</div>
+		<div class="panel active">
+			<table class="transactions-table">
+				<tfoot>
+					<tr>
+						<td>Total: </td>
+						<td class="total" colspan=3>$0</td>
+					</tr>
+				</tfoot>
+				<tbody class="transactions"></tbody>
+			</table>
+		</div>
+		<div class="panel graph"></div>
+	</div>
+
+
+	<!-- Transaction template -->
+	<script type="tmp" id="transaction">
+		<td>{{title}}</td>
+		<td>{{amount}}</td>
+		<td title="{{date}}">{{relativeDate}}</td>
+		<td><button class="delete"></button></td>
+	</script>
+
+	<!-- Google JS API used for line graphs -->
+	<script src="https://www.google.com/jsapi"></script>
+	
+	<!-- classList polyfill -->
+	<script src="http://cdn.herokuapp.com/remy/polyfills/master/classList.js"></script>
+	
+	<!-- Helper functions -->
+	<script src="js/helpers.js"></script>
+
+	<!-- App JS -->
+	<script src="js/app.js"></script>
+</body>
+
+</html>
