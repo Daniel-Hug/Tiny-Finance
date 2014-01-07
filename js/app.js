@@ -12,12 +12,8 @@
 	var moneyTotal = 0;
 	var totalEl = $('.total');
 	function updateTotal(addend) {
-		var newTotal = moneyTotal += addend;
-		totalEl.textContent = formatMoney(newTotal);
-	}
-
-	function dayDistance(dateA, dateB) {
-		return Math.floor((dateB - dateA) / 1000 / 60 / 60 / 24);
+		moneyTotal = stripNum(moneyTotal + addend)
+		totalEl.textContent = formatMoney(moneyTotal);
 	}
 
 	// Render transactions:
@@ -32,8 +28,7 @@
 			date: formatDate(transaction.date)
 		};
 		
-		var tr = document.createElement('tr');
-		tr.innerHTML = tmp.transaction(prettyData);
+		var tr = tmp.transaction(prettyData, 'tr');
 		
 		// Add functionality to delete button:
 		var deleteBtn = tr.lastElementChild.firstChild;
@@ -52,15 +47,10 @@
 
 	// Grab and render transactions from localStorage (recent first):
 	var transactions = storage.get('TFtransactions') || [];
+	
+	var subtotals30Days = [];
 	if (transactions.length) {
-
-		var TRs = transactions.map(render),
-			i = TRs.length,
-			TRsFrag = document.createDocumentFragment();
-		while (i--) TRsFrag.appendChild(TRs[i]);
-		transactionsTbody.appendChild(TRsFrag);
-		
-		
+		transactionsTbody.appendChild(renderMultiple(transactions, render));		
 		
 		
 		/*
@@ -79,7 +69,7 @@
 			var date = transactions[i].date;
 			runningTotal += transactions[i].amount;
 			
-			var dayGap = dayDistance(prevDate, date);
+			var dayGap = dayDiff(prevDate, date);
 			
 			if (dayGap > 0) {
 				for (var a=0; a < dayGap-1; a++) {
@@ -92,7 +82,7 @@
 			
 			prevDate = date;
 		}
-		var subtotals30Days = subtotals.slice(-30);
+		subtotals30Days = subtotals.slice(-30);
 	}
 
 
@@ -107,7 +97,7 @@
 		var data = {
 			title: this.title.value,
 			amount: +this.amount.value,
-			date: this.date.value ? +new Date(this.date.value.split('-').join('/')) : ts,
+			date: this.date.value ? parseDashDate(this.date.value).getTime() : ts,
 			timestamp: ts
 		};
 		if (this === paymentForm) data.amount = -data.amount;
@@ -121,9 +111,9 @@
 		updateLocalStorage();
 		
 		// Render the transaction and append to the DOM at the correct index:
-		var index = transactions.indexOf(data);
-		var tr = render(data, index);
-		transactionsTbody.insertBefore(tr, transactionsTbody.children[transactions.length - index]);
+		var index = transactions.length - 1 - transactions.indexOf(data);
+		var tr = render(data);
+		appendAtIndex(transactionsTbody, tr, index);
 	};
 	
 	// Add form listeners:

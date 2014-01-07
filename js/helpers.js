@@ -43,8 +43,9 @@ function $(selector, scopeEl) {
 	window.on = window.addEventListener || aELPolyfill;
 })();
 
-function getElIndex(el) {
-	return [].indexOf.call(el.parentNode.children, el);
+// http://stackoverflow.com/a/3644354/552067
+function stripNum(number) {
+    return (parseFloat(number.toPrecision(12)));
 }
 
 // Convert integer to $$$ format
@@ -52,40 +53,19 @@ function formatMoney(int) {
 	return int < 0 ? '-$' + -int : '$' + int;
 }
 
-function pad(n, width, z) {
-	z = z || '0';
-	n = n + '';
-	return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+// get a Date object from an input[type=date] value:
+function parseDashDate(str) {
+	return new Date(str.split('-').join('/'));
 }
 
-function multiply(val, len) {
-	var arr = [];
-	while (len--) arr[len] = val;
-	return arr;
+function dayDiff(dateA, dateB) {
+	return Math.floor((dateB - dateA) / 1000 / 60 / 60 / 24);
 }
 
-// Capitalize string:
-function capitalize(str) {
-	return str[0].toUpperCase() + str.slice(1);
+function daysAgo(date) {
+	var days = dayDiff(date, Date.now());
+	return days > 0 ? (days > 1 ? days + ' days ago' : 'yesterday') : (days < 0 ? (days < -1 ? 'in ' + -days + ' days' : 'tomorrow') : 'today');
 }
-
-Date.prototype.startOf = function(unit) {
-	var clone = new Date(this.getTime()), day;
-	/* */if (unit === 'second') clone.setMilliseconds(0);
-	else if (unit === 'minute') clone.setSeconds(0,0);
-	else if (unit === 'hour'  ) clone.setMinutes(0,0,0);
-	else {
-		clone.setHours(0,0,0,0);
-		if (unit === 'week') {
-			day = clone.getDay();
-			clone = day ? new Date(clone - 1000 * 60 * 60 * 24 * day) : clone;
-		}
-		else if (unit === 'month') clone.setDate(1);
-		else if (unit === 'year' ) clone.setMonth(0,1);
-	}
-	return clone;
-};
-
 
 // Convert timestamp into a date string looking like this: "Wed, Jun 5, 2013":
 function formatDate(date) {
@@ -93,23 +73,6 @@ function formatDate(date) {
 	parts[0] += ',';
 	parts[2] = +parts[2] + ',';
 	return parts.join(' ');
-}
-
-function daysAgo(date) {
-	var dayDiff = Math.floor((Date.now() - date) / 1000 / 60 / 60 / 24);
-	return dayDiff > 0 ? (dayDiff > 1 ? dayDiff + ' days ago' : 'yesterday') : (dayDiff < 0 ? (dayDiff < -1 ? 'in ' + -dayDiff + ' days' : 'tomorrow') : 'today');
-	/*
-	return
-		dayDiff > 0
-			? (dayDiff > 1
-				? dayDiff + ' days ago'
-				: 'yesterday')
-			: (dayDiff < 0
-				? (dayDiff < -1
-					? 'in ' + -dayDiff + ' days'
-					: 'tomorrow')
-				: 'today');
-	*/
 }
 
 // localStorage wrapper:
@@ -149,23 +112,44 @@ var tmp = {};
 (function(open, close) {
 	$$('script[type=tmp]').forEach(function(el) {
 		var src = el.innerHTML;
-		tmp[el.id] = function(data) {
-			var result = src,
+		tmp[el.id] = function(data, elName) {
+			var newSrc = src,
 				key;
 			for (key in data) {
-				result = result.split(open + key + close).join(data[key]);
+				newSrc = newSrc.split(open + key + close).join(data[key]);
 			}
-			return result;
+			if (elName) {
+				var el = document.createElement(elName);
+				el.innerHTML = newSrc;
+				return el;
+			}
+			return newSrc;
 		};
 	});
 })('{{', '}}');
 
-function appendAtIndex(parent, src, index) {
-	if ((nextSibling = parent.children[index]))
-		nextSibling.insertAdjacentHTML('beforebegin', src);
-	else parent.innerHTML = src;
-	return parent.children[index];
+
+// Loop through arr of data objects,
+// render each data object as an element with data inserted using the renderer,
+// append each element to a documentFragment, and return the documentFragment:
+function renderMultiple(arr, renderer) {
+	var renderedEls = [].map.call(arr, renderer);
+	var docFrag = document.createDocumentFragment();
+	for (var i = renderedEls.length; --i; docFrag.appendChild(renderedEls[i]));
+	return docFrag;
 }
+
+
+// DOM insertion:
+function prependAInB(newChild, parent) {
+	parent.insertBefore(newChild, parent.firstChild);
+}
+
+function appendAtIndex(parent, newChild, index) {
+	var nextSibling = parent.children[index];
+	parent.insertBefore(newChild, nextSibling);
+}
+
 
 // toggleable tabbed panels
 $$('.tabbed-panels').forEach(function(parent) {
