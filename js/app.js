@@ -3,6 +3,7 @@ function updateLocalStorage() {
 	storage.set('TFtransactions', transactions);
 }
 
+
 // Update money total:
 var moneyTotal = 0;
 var totalEl = $('.total');
@@ -10,6 +11,7 @@ function updateTotal(addend) {
 	moneyTotal = stripNum(moneyTotal + addend)
 	totalEl.textContent = formatMoney(moneyTotal);
 }
+
 
 // Render transactions:
 var transactionsTbody = $('.transactions');
@@ -44,6 +46,7 @@ function render(transaction) {
 
 // Grab transactions from localStorage (recent last):
 var transactions = storage.get('TFtransactions') || [];
+
 
 // Add transactions to table (recent first):
 if (transactions.length) {
@@ -94,6 +97,7 @@ function getTransactionsByDay(transactions) {
 	return days;
 }
 
+
 // Load visualization lib:
 google.load('visualization', '1', {
 	packages: ['corechart']
@@ -134,7 +138,6 @@ function drawGraph() {
 }
 
 google.setOnLoadCallback(graphInit);
-
 
 
 // Handle new income & payment form entries:

@@ -16,6 +16,7 @@ function $(selector, scopeEl) {
 	return (scopeEl || document).querySelector(selector);
 }
 
+
 (function() { //.on()
 	var aELPolyfill = function(eventType, callback) {
 		this.attachEvent('on' + eventType, callback);
@@ -27,6 +28,7 @@ function $(selector, scopeEl) {
 	// Listen to window events:
 	window.on = window.addEventListener || aELPolyfill;
 })();
+
 
 // localStorage wrapper:
 var storage = {
@@ -47,18 +49,6 @@ var storage = {
 	}
 };
 
-// Debounce function calls:
-function debounce(fn, delay, timer) {
-	delay = delay || 150;
-	return function() {
-		var args = arguments,
-			context = this;
-		clearTimeout(timer);
-		timer = setTimeout(function() {
-			fn.apply(context, args);
-		}, delay);
-	};
-}
 
 // Templating:
 var tmp = {};
@@ -101,6 +91,20 @@ function prependAInB(newChild, parent) {
 function appendAtIndex(parent, newChild, index) {
 	var nextSibling = parent.children[index];
 	parent.insertBefore(newChild, nextSibling);
+}
+
+
+// Debounce function calls:
+function debounce(fn, delay, timer) {
+	delay = delay || 150;
+	return function() {
+		var args = arguments,
+			context = this;
+		clearTimeout(timer);
+		timer = setTimeout(function() {
+			fn.apply(context, args);
+		}, delay);
+	};
 }
 
 
