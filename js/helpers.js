@@ -2,21 +2,6 @@
 	A bunch of Helper functions:
 */
 
-// Polyfills:
-	// Array#forEach polyfill:
-	if (![].forEach) Array.prototype.forEach = function(fn, scope) {
-		for (var i = 0, l = this.length; i < l; i++) {
-			fn.call(scope, this[i], i, this);
-		}
-	};
-
-	// Array#map polyfill:
-	if(![].map)Array.prototype.map=function(a,s){for(var b=this,c=b.length,d=[],e=0,f;e<b;)d[e]=e in b?a.call(s,b[e],e++,b):f;return d;};
-
-	// Function#bind polyfill:
-	if(!open.bind){Function.prototype.bind=function(b){function c(){return d.apply(this instanceof a&&b?this:b,e.concat([].slice.call(arguments)));}function a(){}var e=[].slice.call(arguments,1),d=this;a.prototype=this.prototype;c.prototype=new a();return c;};}
-
-
 Array.prototype.remove = function(item) {
 	this.splice(this.indexOf(item), 1);
 	return this;
@@ -42,38 +27,6 @@ function $(selector, scopeEl) {
 	// Listen to window events:
 	window.on = window.addEventListener || aELPolyfill;
 })();
-
-// http://stackoverflow.com/a/3644354/552067
-function stripNum(number) {
-    return (parseFloat(number.toPrecision(12)));
-}
-
-// Convert integer to $$$ format
-function formatMoney(int) {
-	return int < 0 ? '-$' + -int : '$' + int;
-}
-
-// get a Date object from an input[type=date] value:
-function parseDashDate(str) {
-	return new Date(str.split('-').join('/'));
-}
-
-function dayDiff(dateA, dateB) {
-	return Math.floor((dateB - dateA) / 1000 / 60 / 60 / 24);
-}
-
-function daysAgo(date) {
-	var days = dayDiff(date, Date.now());
-	return days > 0 ? (days > 1 ? days + ' days ago' : 'yesterday') : (days < 0 ? (days < -1 ? 'in ' + -days + ' days' : 'tomorrow') : 'today');
-}
-
-// Convert timestamp into a date string looking like this: "Wed, Jun 5, 2013":
-function formatDate(date) {
-	var parts = new Date(date).toDateString().split(' ');
-	parts[0] += ',';
-	parts[2] = +parts[2] + ',';
-	return parts.join(' ');
-}
 
 // localStorage wrapper:
 var storage = {
@@ -176,3 +129,49 @@ $$('.tabbed-panels').forEach(function(parent) {
 		});
 	});
 });
+
+// http://stackoverflow.com/a/3644354/552067
+function stripNum(number) {
+    return (parseFloat(number.toPrecision(12)));
+}
+
+// Convert integer to $$$ format:
+// -0.3 -> -$0.30
+// 30 -> $30
+function formatMoney(int) {
+	return int < 0 ?
+		'-$' + ( int % 1 ? (-int).toFixed(2) : -int ):
+		'$' + ( int % 1 ? int.toFixed(2) : int );
+}
+
+// get a Date object from an input[type=date] value:
+function parseDashDate(str) {
+	return new Date(str.split('-').join('/'));
+}
+
+var MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+function timestampInDays(ts) {
+	return Math.floor(ts / MS_PER_DAY);
+}
+
+function daysAgo(day) {
+	var days = timestampInDays(Date.now()) - day;
+	return days > 0 ?
+		(days > 1 ?
+			days + ' days ago' :
+			'yesterday') :
+		(days < 0 ?
+			(days < -1 ?
+				'in ' + -days + ' days' :
+				'tomorrow') :
+			'today');
+}
+
+// Convert timestamp into a date string looking like this: "Wed, Jun 5, 2013":
+function formatDate(date) {
+	var parts = new Date(date).toDateString().split(' ');
+	parts[0] += ',';
+	parts[2] = +parts[2] + ',';
+	return parts.join(' ');
+}

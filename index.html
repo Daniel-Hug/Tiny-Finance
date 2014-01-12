@@ -24,7 +24,7 @@
 			<button class="tab active pull-right">Add Payment</button>
 		</div>
 		<form class="panel grid income-form">
-			<label for="income-name-field" class="field-row grid-u-1">
+			<label for="income-name-field" class="field-row-top grid-u-1">
 				Title
 				<input class="grid-u-1" type="text" name='title' placeholder="Salary, chores, etc." required>
 			</label>
@@ -44,7 +44,7 @@
 			</div>
 		</form>
 		<form class="panel active grid payment-form">
-			<label class="field-row grid-u-1">
+			<label class="field-row-top grid-u-1">
 				Title
 				<input class="grid-u-1" type="text" name="title" placeholder="What is the payment for?" required>
 			</label>
@@ -94,11 +94,12 @@
 		<td><button class="delete"></button></td>
 	</script>
 
+
+	<!-- Polyfills -->
+	<script src="http://polyfill.io/maybe(bind,indexOf,forEach,map,DOMTokenList)"></script>
+
 	<!-- Google JS API used for line graphs -->
 	<script src="https://www.google.com/jsapi"></script>
-	
-	<!-- classList polyfill -->
-	<script src="http://cdn.herokuapp.com/remy/polyfills/master/classList.js"></script>
 	
 	<!-- Helper functions -->
 	<script src="js/helpers.js"></script>

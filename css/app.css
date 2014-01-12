@@ -21,12 +21,6 @@ body {
 .field-row {
   margin-top: 1em;
 }
-.field-row:first-child {
-  margin-top: 0;
-}
-input[size=6] {
-  width: 96px;
-}
 /* Data table */
 .data-stage .btns {
   margin: 0 8px;
@@ -61,7 +55,6 @@ input[size=6] {
 .transactions-table tbody td:last-child {
   width: 16px;
   /* delete button */
-
 }
 .transactions-table tbody td:last-child .delete {
   display: inline-block;
