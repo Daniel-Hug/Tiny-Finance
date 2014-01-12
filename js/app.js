@@ -51,6 +51,7 @@ var transactions = storage.get('TFtransactions') || [];
 // Add transactions to table (recent first):
 if (transactions.length) {
 	transactionsTbody.appendChild(renderMultiple(transactions, render));
+	var transactionsByDay = getTransactionsByDay(transactions);
 }
 
 
@@ -103,9 +104,9 @@ google.load('visualization', '1', {
 	packages: ['corechart']
 });
 
-var transactionsByDay = getTransactionsByDay(transactions);
-var graphEl = $('.graph'), data, googLn,
-	graphWrapper = graphEl.parentNode;
+var graphEl = $('.graph'),
+	graphWrapper = graphEl.parentNode,
+	data, googLn;
 
 function graphInit() {
 	// Create and populate the data table.
