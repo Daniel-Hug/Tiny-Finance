@@ -78,7 +78,7 @@ var tmp = {};
 function renderMultiple(arr, renderer) {
 	var renderedEls = [].map.call(arr, renderer);
 	var docFrag = document.createDocumentFragment();
-	for (var i = renderedEls.length; --i; docFrag.appendChild(renderedEls[i]));
+	for (var i = renderedEls.length; i--;) docFrag.appendChild(renderedEls[i]);
 	return docFrag;
 }
 
@@ -157,6 +157,10 @@ var MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 function timestampInDays(ts) {
 	return Math.floor(ts / MS_PER_DAY);
+}
+
+function dayToDate(day) {
+	return new Date(day * MS_PER_DAY);
 }
 
 function daysAgo(day) {

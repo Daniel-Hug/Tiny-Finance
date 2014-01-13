@@ -37,6 +37,7 @@ function render(transaction) {
 			updateTotal(-transaction.amount);
 			transactions.remove(transaction);
 			updateLocalStorage();
+			updateGraph();
 		}
 	});
 
@@ -51,51 +52,41 @@ var transactions = storage.get('TFtransactions') || [];
 // Add transactions to table (recent first):
 if (transactions.length) {
 	transactionsTbody.appendChild(renderMultiple(transactions, render));
-	var transactionsByDay = getTransactionsByDay(transactions);
 }
 
 
-function getTransactionsByDay(transactions) {
-	var days = [{
-		transactions: [transactions[0]],
-		day: transactions[0].day,
-		subtotal: transactions[0].amount
-	}];
+
+function getGraphData() {
+	var days = transactions.length ? [[
+		transactions[0].day,
+		transactions[0].amount
+	]] : [];
 
 	for (var i = 1; i < transactions.length; i++) {
 		var lastDay = days[days.length - 1];
-		var day = transactions[i].day;
-		var prevDay = lastDay.day;
-		var dayDiff = day - prevDay;
-
-		if (dayDiff === 0) {
-			lastDay.transactions.push(transactions[i]);
-			lastDay.subtotal = stripNum(lastDay.subtotal + transactions[i].amount);
+		var dayDiff = transactions[i].day - lastDay[0];
+		while(dayDiff--) {
+			days.push([
+				lastDay[0] + 1,
+				lastDay[1]
+			]);
+			lastDay = days[days.length - 1];
 		}
-		else if (dayDiff === 1) {
-			days.push({
-				transactions: [transactions[i]],
-				day: transactions[i].day,
-				subtotal: transactions[i].amount
-			});
-		}
-		else if (dayDiff > 1) {
-			while(--dayDiff) {
-				days.push({
-					transactions: [],
-					day: ++prevDay,
-					subtotal: lastDay.subtotal
-				});
-			}
-			days.push({
-				transactions: [transactions[i]],
-				day: transactions[i].day,
-				subtotal: transactions[i].amount
-			});
-		}
+		lastDay[1] = stripNum(lastDay[1] + transactions[i].amount);
 	}
+
+	// Create and populate the data table.
+	var data = google.visualization.arrayToDataTable(
+		[['Time', 'Net Worth']].concat(days.slice(-30))
+	);
 	
-	return days;
+	// Format date and dollar:
+	var dateFormatter   = new google.visualization.DateFormat({pattern: 'MMM d, y'});
+	var dollarFormatter = new google.visualization.NumberFormat({prefix: '$'});
+	dateFormatter.format(data, 0);
+	dollarFormatter.format(data, 1);
+	
+	return data;
 }
 
 
@@ -106,39 +97,30 @@ google.load('visualization', '1', {
 
 var graphEl = $('.graph'),
 	graphWrapper = graphEl.parentNode,
-	data, googLn;
+	graphData, drawGraph;
 
 function graphInit() {
-	// Create and populate the data table.
-	data = [['Time', 'Net Worth']].concat(transactionsByDay.slice(-30).map(function(day, i) {
-		return [
-			new Date(day.day * MS_PER_DAY),
-			day.subtotal
-		];
-	}));
-	data = google.visualization.arrayToDataTable(data);
-
-	// Format date and dollar:
-	var dateFormatter   = new google.visualization.DateFormat({pattern: 'MMM d, y'});
-	var dollarFormatter = new google.visualization.NumberFormat({prefix: '$'});
-	dateFormatter.format(data, 0);
-	dollarFormatter.format(data, 1);
-
 	googLn = new google.visualization.LineChart(graphEl);
-	drawGraph();
+
+	drawGraph = function drawGraph() {
+		googLn.draw(graphData, {
+			curveType: "function",
+			width:  graphWrapper.offsetWidth,
+			height: graphWrapper.offsetHeight,
+			vAxis: {maxValue: 10}
+		});
+	};
+
+	updateGraph();
 	window.on('resize', debounce(drawGraph));
 }
 
-function drawGraph() {
-	googLn.draw(data, {
-		curveType: "function",
-		width:  graphWrapper.offsetWidth,
-		height: graphWrapper.offsetHeight,
-		vAxis: {maxValue: 10}
-	});
-}
-
 google.setOnLoadCallback(graphInit);
+
+function updateGraph() {
+	graphData = getGraphData();
+	drawGraph();
+}
 
 
 // Handle new income & payment form entries:
@@ -170,6 +152,8 @@ var handleTransactionEntry = function(event) {
 	var index = transactions.length - 1 - transactions.indexOf(data);
 	var tr = render(data);
 	appendAtIndex(transactionsTbody, tr, index);
+	
+	updateGraph();
 };
 
 // Add form listeners:
