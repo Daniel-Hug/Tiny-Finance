@@ -45,26 +45,17 @@ function render(transaction) {
 }
 
 
-// Grab transactions from localStorage (recent last):
-var transactions = storage.get('TFtransactions') || [];
-
-
-// Add transactions to table (recent first):
-if (transactions.length) {
-	transactionsTbody.appendChild(renderMultiple(transactions, render));
-}
-
-
 
 function getGraphData() {
 	var days = transactions.length ? [[
 		transactions[0].day,
 		transactions[0].amount
-	]] : [];
+	]] : [],
+	lastDay, dayDiff;
 
 	for (var i = 1; i < transactions.length; i++) {
-		var lastDay = days[days.length - 1];
-		var dayDiff = transactions[i].day - lastDay[0];
+		lastDay = days[days.length - 1];
+		dayDiff = transactions[i].day - lastDay[0];
 		while(dayDiff--) {
 			days.push([
 				lastDay[0] + 1,
@@ -74,11 +65,13 @@ function getGraphData() {
 		}
 		lastDay[1] = stripNum(lastDay[1] + transactions[i].amount);
 	}
+	
+	days.slice(-30).forEach(function(day) {
+		day[0] = dayToDate(day[0]);
+	});
 
 	// Create and populate the data table.
-	var data = google.visualization.arrayToDataTable(
-		[['Time', 'Net Worth']].concat(days.slice(-30))
-	);
+	var data = google.visualization.arrayToDataTable([['Time', 'Net Worth']].concat(days));
 	
 	// Format date and dollar:
 	var dateFormatter   = new google.visualization.DateFormat({pattern: 'MMM d, y'});
@@ -115,11 +108,22 @@ function graphInit() {
 	window.on('resize', debounce(drawGraph));
 }
 
-google.setOnLoadCallback(graphInit);
-
 function updateGraph() {
 	graphData = getGraphData();
 	drawGraph();
+}
+
+
+// Grab transactions from localStorage (recent last):
+var transactions = storage.get('TFtransactions') || [];
+
+
+if (transactions.length) {
+	// Add transactions to table (recent first):
+	transactionsTbody.appendChild(renderMultiple(transactions, render));
+
+	// Set up graph:
+	google.setOnLoadCallback(graphInit);
 }
 
 
@@ -135,10 +139,12 @@ var handleTransactionEntry = function(event) {
 	var data = {
 		title: this.title.value,
 		amount: +this.amount.value,
-		day: dashDate ? parseDashDate(dashDate) / MS_PER_DAY : timestampInDays(ts),
+		day: timestampInDays(dashDate ? parseDashDate(dashDate) : ts),
 		timestamp: ts
 	};
 	if (this === paymentForm) data.amount = -data.amount;
+	
+	var isFirst = !transactions.length;
 	
 	// Add the new transaction to the transactions array:
 	transactions.push(data);
@@ -153,7 +159,8 @@ var handleTransactionEntry = function(event) {
 	var tr = render(data);
 	appendAtIndex(transactionsTbody, tr, index);
 	
-	updateGraph();
+	if (isFirst) graphInit();
+	else updateGraph();
 };
 
 // Add form listeners:
