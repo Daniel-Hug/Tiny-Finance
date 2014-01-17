@@ -74,8 +74,8 @@ function getGraphData() {
 	var data = google.visualization.arrayToDataTable([['Time', 'Net Worth']].concat(days));
 	
 	// Format date and dollar:
-	var dateFormatter   = new google.visualization.DateFormat({pattern: 'MMM d, y'});
-	var dollarFormatter = new google.visualization.NumberFormat({prefix: '$'});
+	var dateFormatter   = new google.visualization.DateFormat({ pattern: 'MMM d, y' });
+	var dollarFormatter = new google.visualization.NumberFormat({ prefix: '$' });
 	dateFormatter.format(data, 0);
 	dollarFormatter.format(data, 1);
 	
@@ -97,10 +97,12 @@ function graphInit() {
 
 	drawGraph = function drawGraph() {
 		googLn.draw(graphData, {
-			curveType: "function",
+			//curveType: "function",
 			width:  graphWrapper.offsetWidth,
 			height: graphWrapper.offsetHeight,
-			vAxis: {maxValue: 10}
+			hAxis: { format: 'MMM d' },
+			vAxis: { maxValue: 10 },
+			legend: { position: 'bottom' }
 		});
 	};
 
