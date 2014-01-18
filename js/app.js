@@ -66,8 +66,19 @@ function getGraphData() {
 		lastDay[1] = stripNum(lastDay[1] + transactions[i].amount);
 	}
 	
-	days.slice(-30).forEach(function(day) {
+	var today = timestampInDays(new Date());
+	dayDiff = today - lastDay[0];
+	while(dayDiff--) {
+		days.push([
+			lastDay[0] + 1,
+			lastDay[1]
+		]);
+		lastDay = days[days.length - 1];
+	}
+	
+	days = days.slice(-30).map(function(day) {
 		day[0] = dayToDate(day[0]);
+		return day;
 	});
 
 	// Create and populate the data table.
@@ -152,7 +163,7 @@ var handleTransactionEntry = function(event) {
 	transactions.push(data);
 	// Sort transactions recent last:
 	transactions.sort(function(a, b) {
-		return a.date - b.date;
+		return a.day - b.day;
 	});
 	updateLocalStorage();
 	
