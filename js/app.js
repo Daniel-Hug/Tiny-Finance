@@ -51,10 +51,9 @@ function getGraphData() {
 		transactions[0].day,
 		transactions[0].amount
 	]] : [],
-	lastDay, dayDiff;
+	lastDay = days[0], dayDiff;
 
 	for (var i = 1; i < transactions.length; i++) {
-		lastDay = days[days.length - 1];
 		dayDiff = transactions[i].day - lastDay[0];
 		while(dayDiff--) {
 			days.push([
