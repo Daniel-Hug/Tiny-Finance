@@ -53,13 +53,21 @@ var storage = {
 // Templating:
 var tmp = {};
 (function(open, close) {
+	function escapeHTML(unsafe_str) {
+		return unsafe_str
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;');
+	}
 	$$('script[type=tmp]').forEach(function(el) {
 		var src = el.innerHTML;
 		tmp[el.id] = function(data, elName) {
 			var newSrc = src,
 				key;
 			for (key in data) {
-				newSrc = newSrc.split(open + key + close).join(data[key]);
+				newSrc = newSrc
+					.split(open + key + close)
+					.join(escapeHTML(data[key]));
 			}
 			if (elName) {
 				var el = document.createElement(elName);
