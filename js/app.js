@@ -15,7 +15,7 @@ function updateTotal(addend) {
 
 // Render transactions:
 var transactionsTbody = $('.transactions');
-function render(transaction) {
+function renderTransaction(transaction) {
 	updateTotal(transaction.amount);
 	
 	var ts = transaction.day * MS_PER_DAY;
@@ -132,7 +132,7 @@ var transactions = storage.get('TFtransactions') || [];
 
 if (transactions.length) {
 	// Add transactions to table (recent first):
-	transactionsTbody.appendChild(renderMultiple(transactions, render));
+	transactionsTbody.appendChild(renderMultiple(transactions, renderTransaction));
 
 	// Set up graph:
 	google.setOnLoadCallback(graphInit);
@@ -168,7 +168,7 @@ var handleTransactionEntry = function(event) {
 	
 	// Render the transaction and append to the DOM at the correct index:
 	var index = transactions.length - 1 - transactions.indexOf(data);
-	var tr = render(data);
+	var tr = renderTransaction(data);
 	appendAtIndex(transactionsTbody, tr, index);
 	
 	if (isFirst) graphInit();

@@ -50,25 +50,36 @@ var storage = {
 };
 
 
+// Make strings safe for innerHTML and attribute insertion (templates):
+var escapeHTML = (function() {
+	var entityMap = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#39;'
+	},
+	re = /[&<>"']/g;
+	
+	return function(str) {
+		return String(str).replace(re, function (char) {
+			return entityMap[char];
+		});
+	};
+})();
+
+
 // Templating:
 var tmp = {};
-(function(open, close) {
-	function escapeHTML(unsafe_str) {
-		return unsafe_str
-			.replace(/&/g, '&amp;')
-			.replace(/</g, '&lt;')
-			.replace(/>/g, '&gt;');
-	}
-	$$('script[type=tmp]').forEach(function(el) {
+(function(regExp) {
+	each(qsa('script[type="text/tmp"]'), function(el) {
 		var src = el.innerHTML;
 		tmp[el.id] = function(data, elName) {
-			var newSrc = src,
-				key;
-			for (key in data) {
-				newSrc = newSrc
-					.split(open + key + close)
-					.join(escapeHTML(data[key]));
-			}
+			var newSrc = src.replace(regExp, function(match, key) {
+				var numCurlyBraces = match.length - key.length;
+				return numCurlyBraces % 2 ? match :
+					(numCurlyBraces === 6 ? data[key] : escapeHTML(data[key]));
+			});
 			if (elName) {
 				var el = document.createElement(elName);
 				el.innerHTML = newSrc;
@@ -77,7 +88,7 @@ var tmp = {};
 			return newSrc;
 		};
 	});
-})('{{', '}}');
+})(/{{{?(\w+)}}}?/g);
 
 
 // Loop through arr of data objects,
