@@ -1,3 +1,0 @@
-[submodule "js/moment"]
-	path = js/moment
-	url = git@github.com:moment/moment.git
