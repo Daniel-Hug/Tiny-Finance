@@ -18,13 +18,11 @@ var transactionsTbody = qs('.transactions');
 function renderTransaction(transaction) {
 	updateTotal(transaction.amount);
 	
-	var ts = transaction.day * MS_PER_DAY;
-	
 	var prettyData = {
 		title: transaction.title,
 		amount: formatMoney(transaction.amount),
-		relativeDate: daysAgo(transaction.day),
-		date: formatDate(ts)
+		relativeDate: daysAgo(transaction.date),
+		date: formatDate(transaction.date)
 	};
 	
 	var tr = tmp.transaction(prettyData, 'tr');
@@ -45,38 +43,55 @@ function renderTransaction(transaction) {
 }
 
 
-
-function getGraphData() {
+// Returns an array of 30 arrays.
+// The 30 arrays represent the last 30 days.
+// The first item in each is that day's timestamp.
+// The second item in each is the dollar subtotal for that day.
+function subtotalsByDay() {
 	var days = transactions.length ? [[
-		transactions[0].day,
+		transactions[0].date,
 		transactions[0].amount
-	]] : [],
+	]] : [[startOfDay(), 0]],
 	lastDay = days[0], dayDiff;
 
-	for (var i = 1; i < transactions.length; i++) {
-		dayDiff = transactions[i].day - lastDay[0];
-		while(dayDiff--) {
+	function fillGaps(endDate) {
+		dayDiff = getDayDiff(lastDay[0], endDate);
+		while (dayDiff-- > 0) {
 			days.push([
-				lastDay[0] + 1,
+				startOfDay(lastDay[0] + 1.5 * MS_PER_DAY),
 				lastDay[1]
 			]);
 			lastDay = days[days.length - 1];
 		}
+	}
+
+	// Fill gaps between transactions and calculate subtotals for days with transactions:
+	for (var i = 1; i < transactions.length; i++) {
+		fillGaps(transactions[i].date);
 		lastDay[1] = stripNum(lastDay[1] + transactions[i].amount);
 	}
+
+	// Fill gaps between last transaction and today:
+	fillGaps(startOfDay());
 	
-	var today = timestampInDays(new Date());
-	dayDiff = today - lastDay[0];
-	while(dayDiff--) {
-		days.push([
-			lastDay[0] + 1,
-			lastDay[1]
-		]);
-		lastDay = days[days.length - 1];
+	// Add enough 0 balance days before first transaction to make sure we have 30 days:
+	if (days.length < 30) {
+		var numToPrepend = 30 - days.length;
+		while (numToPrepend-- > 0) {
+			days.unshift([
+				startOfDay(days[0][0] - 0.5 * MS_PER_DAY),
+				0
+			]);
+		}
 	}
-	
-	days = days.slice(-30).map(function(day) {
-		day[0] = dayToDate(day[0]);
+
+	return days;
+}
+
+
+function formatDaysForTable() {
+	var days = subtotalsByDay().slice(-30).map(function(day) {
+		day[0] = new Date(day[0]);
 		return day;
 	});
 
@@ -121,7 +136,7 @@ function graphInit() {
 }
 
 function updateGraph() {
-	graphData = getGraphData();
+	graphData = formatDaysForTable();
 	drawGraph();
 }
 
@@ -133,10 +148,10 @@ var transactions = storage.get('TFtransactions') || [];
 if (transactions.length) {
 	// Add transactions to table (recent first):
 	transactionsTbody.appendChild(renderMultiple(transactions, renderTransaction));
-
-	// Set up graph:
-	google.setOnLoadCallback(graphInit);
 }
+
+// Set up graph:
+google.setOnLoadCallback(graphInit);
 
 
 // Handle new income & payment form entries:
@@ -151,18 +166,16 @@ var handleTransactionEntry = function(event) {
 	var data = {
 		title: this.title.value,
 		amount: +this.amount.value,
-		day: timestampInDays(dashDate ? parseDashDate(dashDate) : ts),
+		date: dashDate ? parseDashDate(dashDate).getTime() : startOfDay(ts),
 		timestamp: ts
 	};
 	if (this === paymentForm) data.amount = -data.amount;
-	
-	var isFirst = !transactions.length;
 	
 	// Add the new transaction to the transactions array:
 	transactions.push(data);
 	// Sort transactions recent last:
 	transactions.sort(function(a, b) {
-		return a.day - b.day;
+		return a.date - b.date;
 	});
 	updateLocalStorage();
 	
@@ -171,8 +184,7 @@ var handleTransactionEntry = function(event) {
 	var tr = renderTransaction(data);
 	appendAtIndex(transactionsTbody, tr, index);
 	
-	if (isFirst) graphInit();
-	else updateGraph();
+	updateGraph();
 };
 
 // Add form listeners:

@@ -72,16 +72,17 @@ function parseDashDate(str) {
 
 var MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-function timestampInDays(ts) {
-	return Math.floor(ts / MS_PER_DAY);
+function startOfDay(ts) {
+	var date = ts ? new Date(ts) : new Date();
+	return date.setHours(0,0,0,0);
 }
 
-function dayToDate(day) {
-	return new Date(day * MS_PER_DAY);
+function getDayDiff(a, b) {
+	return Math.round((b - a) / MS_PER_DAY);
 }
 
 function daysAgo(day) {
-	var days = timestampInDays(Date.now()) - day;
+	var days = getDayDiff(day, startOfDay());
 	return days > 0 ?
 		(days > 1 ?
 			days + ' days ago' :
