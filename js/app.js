@@ -6,7 +6,7 @@ function updateLocalStorage() {
 
 // Update money total:
 var moneyTotal = 0;
-var totalEl = $('.total');
+var totalEl = qs('.total');
 function updateTotal(addend) {
 	moneyTotal = stripNum(moneyTotal + addend)
 	totalEl.textContent = formatMoney(moneyTotal);
@@ -14,7 +14,7 @@ function updateTotal(addend) {
 
 
 // Render transactions:
-var transactionsTbody = $('.transactions');
+var transactionsTbody = qs('.transactions');
 function renderTransaction(transaction) {
 	updateTotal(transaction.amount);
 	
@@ -31,7 +31,7 @@ function renderTransaction(transaction) {
 	
 	// Add functionality to delete button:
 	var deleteBtn = tr.lastElementChild.firstChild;
-	deleteBtn.on('click', function() {
+	on(deleteBtn, 'click', function() {
 		if (confirm('Delete?\n' + transaction.title)) {
 			tr.parentNode.removeChild(tr);
 			updateTotal(-transaction.amount);
@@ -98,7 +98,7 @@ google.load('visualization', '1', {
 	packages: ['corechart']
 });
 
-var graphEl = $('.graph'),
+var graphEl = qs('.graph'),
 	graphWrapper = graphEl.parentNode,
 	graphData, drawGraph;
 
@@ -117,7 +117,7 @@ function graphInit() {
 	};
 
 	updateGraph();
-	window.on('resize', debounce(drawGraph));
+	on(window, 'resize', debounce(drawGraph));
 }
 
 function updateGraph() {
@@ -140,7 +140,7 @@ if (transactions.length) {
 
 
 // Handle new income & payment form entries:
-var paymentForm = $('.payment-form');
+var paymentForm = qs('.payment-form');
 var handleTransactionEntry = function(event) {
 	// Don't submit the form:
 	event.preventDefault();
@@ -176,5 +176,5 @@ var handleTransactionEntry = function(event) {
 };
 
 // Add form listeners:
-$('.income-form').on('submit', handleTransactionEntry);
-paymentForm.on('submit', handleTransactionEntry);
+on(qs('.income-form'), 'submit', handleTransactionEntry);
+on(paymentForm, 'submit', handleTransactionEntry);
