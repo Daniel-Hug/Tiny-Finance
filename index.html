@@ -13,52 +13,50 @@
 </head>
 
 <body>
-	<!-- Add income/payment Forms -->
 	<div class="transaction-forms tabbed-panels active closeable">
 		<div class="btns">
-			<button class="tab">Add Income</button>
-			<button class="tab active pull-right">Add Payment</button>
+			<button class="tab active">Add Transaction</button>
+			<button class="tab pull-right">Wallets</button>
 		</div>
-		<form class="panel grid income-form">
-			<label class="field-row-top grid-u-1">
+		
+		<!-- transaction entry form -->
+		<form class="panel active grid transaction-form">
+			<label class="field-row-top grid-u-3-5 gutter">
 				Title
-				<input class="grid-u-1" type="text" name='title' placeholder="Salary, chores, etc." required>
+				<input class="grid-u-1" type="text" name="title" placeholder="Doc bills, salary, etc." required>
+			</label>
+			<label class="field-row-top grid-u-2-5">
+				Wallet
+				<select class="full-width wallet-select" name="wallet" required></select>
 			</label>
 			<label class="field-row grid-u-3-5 gutter">
 				Date
-				<input class="grid-u-1" type="date" name='date'>
+				<input class="grid-u-1" type="date" name="date">
 			</label>
 			<label class="field-row grid-u-2-5">
-				How Much
-				<div class="wrap full-width">
-					<span class="unit">$</span>
-					<input class="full-width" type="number" name="amount" min="0" step=".01" maxlength="7" placeholder="0.00" required>
-				</div>
-			</label>
-			<div class="field-row grid-u-1">
-				<button class="grid-u-1" type="submit">Add</button>
-			</div>
-		</form>
-		<form class="panel active grid payment-form">
-			<label class="field-row-top grid-u-1">
-				Title
-				<input class="grid-u-1" type="text" name="title" placeholder="What is the payment for?" required>
-			</label>
-			<label class="field-row grid-u-3-5 gutter">
-				Date
-				<input  class="grid-u-1" type="date" name="date">
-			</label>
-			<label class="field-row grid-u-2-5">
-				Cost
-				<div class="wrap full-width">
-					<span class="unit negative">-$</span>
-					<input class="full-width" type="number" name="amount" min="0" step=".01" maxlength="7" placeholder="0.00" required>
-				</div>
+				Amount ($)
+				<input class="full-width" type="number" name="amount" min="-9999999" max="9999999" step=".01" placeholder="-5.95" required>
 			</label>
 			<div class="field-row">
 				<button class="grid-u-1" type="submit">Add</button>
 			</div>
 		</form>
+		
+		<!-- Wallets -->
+		<div class="panel">
+			<ul class="wallet-list">
+				<li data-tmp="wallet">{{name}}</li>
+			</ul>
+			<form class="grid wallet-form">
+				<label class="field-row-top grid-u-3-5 gutter">
+					Name
+					<input class="grid-u-1" type="text" name='title' placeholder="wallet, checking, etc." required>
+				</label>
+				<div class="field-row grid-u-2-5">
+					<button class="grid-u-1" type="submit">Add wallet</button>
+				</div>
+			</form>
+		</div>
 	</div>
 
 	<!-- Data visualizations -->
@@ -72,29 +70,29 @@
 				<tfoot>
 					<tr>
 						<td>Total: </td>
-						<td class="total" colspan="3">$0</td>
+						<td class="total" colspan="4">$0</td>
 					</tr>
 				</tfoot>
-				<tbody class="transactions"></tbody>
+				<tbody class="transactions">
+					<tr data-tmp="transaction">
+						<td>{{title}}</td>
+						<td>{{amount}}</td>
+						<td title="{{date}}">{{relativeDate}}</td>
+						<td>{{wallet}}</td>
+						<td><button class="delete"></button></td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 		<div class="panel graph"></div>
 	</div>
-
-
-	<script type="text/tmp" id="transaction">
-		<td>{{title}}</td>
-		<td>{{amount}}</td>
-		<td title="{{date}}">{{relativeDate}}</td>
-		<td><button class="delete"></button></td>
-	</script>
-
 
 	<!-- JS -->
 	<script src="http://polyfill.io/maybe(bind,indexOf,forEach,map,DOMTokenList)"></script>
 	<script src="https://www.google.com/jsapi"></script>
 	<script src="js/app-base.js"></script>
 	<script src="js/helpers.js"></script>
+	<script src="js/wallets.js"></script>
 	<script src="js/app.js"></script>
 </body>
 

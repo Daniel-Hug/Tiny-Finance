@@ -1,6 +1,6 @@
 // Update localStorage:
-function updateLocalStorage() {
-	storage.set('TFtransactions', transactions);
+function updateStorage(key) {
+	storage.set('TF' + key, window[key]);
 }
 
 
@@ -17,16 +17,15 @@ function updateTotal(addend) {
 var transactionsTbody = qs('.transactions');
 function renderTransaction(transaction) {
 	updateTotal(transaction.amount);
-	
-	var prettyData = {
+
+	var tr = tmp.transaction({
 		title: transaction.title,
 		amount: formatMoney(transaction.amount),
 		relativeDate: daysAgo(transaction.date),
-		date: formatDate(transaction.date)
-	};
-	
-	var tr = tmp.transaction(prettyData, 'tr');
-	
+		date: formatDate(transaction.date),
+		wallet: wallets[transaction.wallet].name
+	});
+
 	// Add functionality to delete button:
 	var deleteBtn = tr.lastElementChild.firstChild;
 	on(deleteBtn, 'click', function() {
@@ -34,7 +33,7 @@ function renderTransaction(transaction) {
 			tr.parentNode.removeChild(tr);
 			updateTotal(-transaction.amount);
 			transactions.remove(transaction);
-			updateLocalStorage();
+			updateStorage('transactions');
 			updateGraph();
 		}
 	});
@@ -85,12 +84,12 @@ function subtotalsByDay() {
 		}
 	}
 
-	return days;
+	return days.slice(-30);
 }
 
 
 function formatDaysForTable() {
-	var days = subtotalsByDay().slice(-30).map(function(day) {
+	var days = subtotalsByDay().map(function(day) {
 		day[0] = new Date(day[0]);
 		return day;
 	});
@@ -144,19 +143,16 @@ function updateGraph() {
 // Grab transactions from localStorage (recent last):
 var transactions = storage.get('TFtransactions') || [];
 
+// Add transactions to table (recent first):
+renderMultiple(transactions, renderTransaction, transactionsTbody);
 
-if (transactions.length) {
-	// Add transactions to table (recent first):
-	transactionsTbody.appendChild(renderMultiple(transactions, renderTransaction));
-}
 
 // Set up graph:
 google.setOnLoadCallback(graphInit);
 
 
 // Handle new income & payment form entries:
-var paymentForm = qs('.payment-form');
-var handleTransactionEntry = function(event) {
+on(qs('.transaction-form'), 'submit', function(event) {
 	// Don't submit the form:
 	event.preventDefault();
 
@@ -165,11 +161,11 @@ var handleTransactionEntry = function(event) {
 	var dashDate = this.date.value;
 	var data = {
 		title: this.title.value,
+		wallet: this.wallet.selectedIndex,
 		amount: +this.amount.value,
 		date: dashDate ? parseDashDate(dashDate).getTime() : startOfDay(ts),
 		timestamp: ts
 	};
-	if (this === paymentForm) data.amount = -data.amount;
 	
 	// Add the new transaction to the transactions array:
 	transactions.push(data);
@@ -177,7 +173,7 @@ var handleTransactionEntry = function(event) {
 	transactions.sort(function(a, b) {
 		return a.date - b.date;
 	});
-	updateLocalStorage();
+	updateStorage('transactions');
 	
 	// Render the transaction and append to the DOM at the correct index:
 	var index = transactions.length - 1 - transactions.indexOf(data);
@@ -185,8 +181,4 @@ var handleTransactionEntry = function(event) {
 	appendAtIndex(transactionsTbody, tr, index);
 	
 	updateGraph();
-};
-
-// Add form listeners:
-on(qs('.income-form'), 'submit', handleTransactionEntry);
-on(paymentForm, 'submit', handleTransactionEntry);
+});

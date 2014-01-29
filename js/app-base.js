@@ -65,43 +65,48 @@ var escapeHTML = (function() {
 	},
 	re = /[&<>"']/g;
 	
+	function getEntity(character) {
+		return entityMap[character];
+	}
+	
 	return function(str) {
-		return String(str).replace(re, function (char) {
-			return entityMap[char];
-		});
+		return String(str).replace(re, getEntity);
 	};
 })();
 
 
-// Templating:
+// DOM Templating:
 var tmp = {};
-(function(regExp) {
-	each(qsa('script[type="text/tmp"]'), function(el) {
-		var src = el.innerHTML;
-		tmp[el.id] = function(data, elName) {
-			var newSrc = src.replace(regExp, function(match, key) {
-				var numCurlyBraces = match.length - key.length;
-				return numCurlyBraces % 2 ? match :
-					(numCurlyBraces === 6 ? data[key] : escapeHTML(data[key]));
-			});
-			if (elName) {
-				var el = document.createElement(elName);
-				el.innerHTML = newSrc;
-				return el;
-			}
-			return newSrc;
-		};
-	});
-})(/{{{?(\w+)}}}?/g);
+[].forEach.call(document.querySelectorAll('[data-tmp]'), function(el) {
+	var parent = el.parentNode;
+	var parentTagName = parent.tagName;
+	var id = el.getAttribute('data-tmp');
+	var re = this;
+	el.removeAttribute('data-tmp');
+	var src = el.outerHTML;
+	parent.removeChild(el);
+	tmp[id] = function(data) {
+		var newSrc = src.replace(re, function(match, key) {
+			var numCurlyBraces = match.length - key.length;
+			return numCurlyBraces % 2 ? match :
+			(numCurlyBraces === 6 ? data[key] : escapeHTML(data[key]));
+		});
+		var parentClone = document.createElement(parentTagName);
+		parentClone.innerHTML = newSrc;
+		return parentClone.removeChild(parentClone.firstChild);
+	};
+}, /\{\{\{?(\w+)\}\}\}?/g);
 
 
 // DOM rendering helpers:
-function renderMultiple(arr, renderer, parent) {
-	var renderedEls = map(arr, renderer);
-	var docFrag = document.createDocumentFragment();
-	for (var i = renderedEls.length; i--;) docFrag.appendChild(renderedEls[i]);
-	if (parent) parent.appendChild(docFrag);
-	else return docFrag;
+function renderMultiple(arr, renderer, parent, keepOrder) {
+	if (!arr.length) return;
+	var renderedEls = map(arr, renderer),
+		docFrag = document.createDocumentFragment(),
+		l = renderedEls.length;
+	if (keepOrder) for (var i = 0; i < l; i++) docFrag.appendChild(renderedEls[i]);
+	else while (l--) docFrag.appendChild(renderedEls[l]);
+	parent.appendChild(docFrag);
 }
 
 function prependAInB(newChild, parent) {
