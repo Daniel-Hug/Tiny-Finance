@@ -52,30 +52,18 @@ body {
   white-space: normal;
   text-overflow: ellipsis;
 }
-.transactions-table tbody td:last-child {
+.transactions-table .delete {
   width: 16px;
-  /* delete button */
 }
-.transactions-table tbody td:last-child .delete {
-  display: inline-block;
+.transactions-table .delete button {
   border: 0;
   padding: 0;
-  width: 16px;
-  height: 16px;
-  font-size: 14px;
-  line-height: 16px;
-  text-align: center;
-  border-radius: 50%;
-  color: white;
-  background: black;
+  background: none;
   box-shadow: none;
   text-shadow: none;
-  cursor: pointer;
-  opacity: .25;
+  height: auto;
+  opacity: 0.7;
 }
-.transactions-table tbody td:last-child .delete:hover {
-  opacity: .5;
-}
-.transactions-table tbody td:last-child .delete:before {
-  content: '×';
+.transactions-table .delete button:hover {
+  opacity: 1;
 }

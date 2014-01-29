@@ -27,8 +27,7 @@ function renderTransaction(transaction) {
 	});
 
 	// Add functionality to delete button:
-	var deleteBtn = tr.lastElementChild.firstChild;
-	on(deleteBtn, 'click', function() {
+	on(qs('.delete button', tr), 'click', function() {
 		if (confirm('Delete?\n' + transaction.title)) {
 			tr.parentNode.removeChild(tr);
 			updateTotal(-transaction.amount);

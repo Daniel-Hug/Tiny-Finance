@@ -70,33 +70,20 @@ body {
 		text-overflow: ellipsis;
 	}
 	
-	tbody td:last-child {
+	.delete {
 		width: 16px;
 
-		/* delete button */
-		.delete {
-			display: inline-block;
+		button {
 			border: 0;
-			padding: 0;
-			width: 16px;
-			height: 16px;
-			font-size: 14px;
-			line-height: 16px;
-			text-align: center;
-			border-radius: 50%;
-			color: white;
-			background: black;
+			padding-top: 0;
+			padding-bottom: 0;
+			background: none;
 			box-shadow: none;
 			text-shadow: none;
-			cursor: pointer;
-			opacity: .25;
+			opacity: 0.7;
 			
 			&:hover {
-				opacity: .5;
-			}
-		
-			&:before {
-				content: '×';
+				opacity: 1;
 			}
 		}
 	}
