@@ -1,9 +1,8 @@
 // Grab wallets from storage:
-var wallets = storage.get('TFwallets') || [{
+var wallets = new Arr('TFwallets', [{
 	name: 'wallet',
 	timestamp: Date.now()
-}];
-
+}]);
 
 
 // Add wallets to select element in transaction form:
@@ -11,19 +10,29 @@ function renderWalletOption(data) {
 	return new Option(data.name);
 }
 
-var walletSelect = qs('.wallet-select');
-renderMultiple(wallets, renderWalletOption, walletSelect, true);
-
+wallets.attach(renderWalletOption, qs('.wallet-select'), true);
 
 
 // Show list of wallets:
-function renderWallet(data) {
-	return tmp.wallet(data);
+function renderWallet(data, index) {
+	var walletRow = tmp.wallet(data);
+	var button = qs('button', walletRow)
+
+	// Edit wallet name:
+	on(qs('form.edit', walletRow), 'submit', function(event) {
+		event.preventDefault();
+		wallets.edit(data, 'name', this.name.value);
+	});
+
+	// Remove wallet:
+// 	on(qs('.delete', walletRow), 'click', function(event) {
+// 		wallets.remove(data);
+// 	});
+
+	return walletRow;
 }
 
-var walletList = qs('.wallet-list');
-renderMultiple(wallets, renderWallet, walletList);
-
+wallets.attach(renderWallet, qs('.wallet-list'));
 
 
 // Handle new wallet entries:
@@ -31,16 +40,9 @@ on(qs('.wallet-form'), 'submit', function(event) {
 	// Don't submit the form:
 	event.preventDefault();
 
-	// Get option data:
-	var data = {
+	// Get option data:	
+	wallets.push({
 		name: this.title.value,
 		timestamp: Date.now()
-	};
-	
-	wallets.push(data);        
-	updateStorage('wallets');
-	
-	// render new wallet to page where needed:
-	walletSelect.appendChild(renderWalletOption(data));
-	walletList.appendChild(renderWallet(data));
+	});
 });

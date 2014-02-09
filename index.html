@@ -19,7 +19,7 @@
 			<button class="tab active">Add Transaction</button>
 			<button class="tab pull-right">Wallets</button>
 		</div>
-		
+
 		<!-- transaction entry form -->
 		<form class="panel active grid transaction-form">
 			<label class="field-row-top grid-u-3-5 gutter">
@@ -42,12 +42,9 @@
 				<button class="grid-u-1" type="submit">Add</button>
 			</div>
 		</form>
-		
+
 		<!-- Wallets -->
 		<div class="panel">
-			<ul class="wallet-list">
-				<li data-tmp="wallet">{{name}}</li>
-			</ul>
 			<form class="grid wallet-form">
 				<label class="field-row-top grid-u-3-5 gutter">
 					Name
@@ -57,6 +54,15 @@
 					<button class="grid-u-1" type="submit">Add wallet</button>
 				</div>
 			</form>
+			<ul class="wallet-list">
+				<li data-tmp="wallet">
+				<!--<button class="edit icon-pencil"></button>-->
+				<!--<button class="delete icon-remove"></button>-->
+					<form class="edit">
+						<input type="text" value="{{name}}" name="name">
+					</form>
+				</li>
+			</ul>
 		</div>
 	</div>
 
@@ -79,7 +85,7 @@
 						<td>{{title}}</td>
 						<td>{{amount}}</td>
 						<td title="{{date}}">{{relativeDate}}</td>
-						<td>{{wallet}}</td>
+						<td class="wallet">{{wallet}}</td>
 						<td class="delete"><button class="icon-remove"></button></td>
 					</tr>
 				</tbody>
@@ -92,6 +98,7 @@
 	<script src="http://polyfill.io/maybe(bind,indexOf,forEach,map,DOMTokenList)"></script>
 	<script src="https://www.google.com/jsapi"></script>
 	<script src="js/app-base.js"></script>
+	<script src="js/data.js"></script>
 	<script src="js/helpers.js"></script>
 	<script src="js/wallets.js"></script>
 	<script src="js/app.js"></script>

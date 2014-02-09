@@ -26,6 +26,10 @@ function renderTransaction(transaction) {
 		wallet: wallets[transaction.wallet].name
 	});
 
+	Obj.subscribe(wallets[transaction.wallet], function(wallet) {
+		qs('.wallet', tr).textContent = wallet.name
+	});
+
 	// Add functionality to delete button:
 	on(qs('.delete button', tr), 'click', function() {
 		if (confirm('Delete?\n' + transaction.title)) {

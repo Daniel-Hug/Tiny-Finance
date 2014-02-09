@@ -99,6 +99,11 @@ var tmp = {};
 
 
 // DOM rendering helpers:
+function removeChilds(parent) {
+    var last;
+    while (last = parent.lastChild) parent.removeChild(last);
+}
+
 function renderMultiple(arr, renderer, parent, keepOrder) {
 	if (!arr.length) return;
 	var renderedEls = map(arr, renderer),
@@ -106,6 +111,7 @@ function renderMultiple(arr, renderer, parent, keepOrder) {
 		l = renderedEls.length;
 	if (keepOrder) for (var i = 0; i < l; i++) docFrag.appendChild(renderedEls[i]);
 	else while (l--) docFrag.appendChild(renderedEls[l]);
+	removeChilds(parent);
 	parent.appendChild(docFrag);
 }
 

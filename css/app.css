@@ -21,6 +21,9 @@ body {
 .field-row {
   margin-top: 1.2em;
 }
+.wallet-list form.edit {
+  display: inline-block;
+}
 /* Data table */
 .data-stage .btns {
   margin: 0 8px;
@@ -57,13 +60,14 @@ body {
 }
 .transactions-table .delete button {
   border: 0;
-  padding: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   background: none;
   box-shadow: none;
   text-shadow: none;
-  height: auto;
   opacity: 0.7;
 }
 .transactions-table .delete button:hover {
   opacity: 1;
 }
+/*# sourceMappingURL=style.map */
