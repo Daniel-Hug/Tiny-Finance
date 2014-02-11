@@ -50,8 +50,23 @@ var Obj = (function(map) {
 })([]);
 
 
+// Insert an object into a sorted array of similar objects.
+// Objects are sorted (least to greatest) by the property passed as the third argument.
+function sortedIndex(array, value, key) {
+	var low = 0,
+		high = array.length;
+
+	while (low < high) {
+		var mid = (low + high) >>> 1;
+		if (array[mid][key] < value[key]) low = mid + 1;
+		else high = mid;
+	}
+	return low;
+}
+
+
 // Bind an array of Data objects to the DOM:
-function Arr(storageIDOrArray, def) {
+function Arr(storageIDOrArray, def, sortKey) {
 	var arr;
 	if (typeof storageIDOrArray === 'string') {
 		arr = storage.get(storageIDOrArray) || def || [];
@@ -60,6 +75,7 @@ function Arr(storageIDOrArray, def) {
 	else arr = storageIDOrArray;
 	[].push.apply(this, arr);
 	this.parasites = [];
+	if (sortKey) this.sortKey = sortKey;
 }
 
 Arr.prototype = {
@@ -71,7 +87,8 @@ Arr.prototype = {
 
 	push: function(obj, arrIndex) {
 		var arrLength = this.length;
-		arrIndex = typeof arrIndex === 'number' ? arrIndex : arrLength;
+		arrIndex = typeof arrIndex === 'number' ? arrIndex :
+			(this.sortKey ? sortedIndex(this, obj, this.sortKey) : arrLength);
 		this.splice(arrIndex, 0, obj);
 		this.updateStorage();
 		each(this.parasites, function(parasite) {

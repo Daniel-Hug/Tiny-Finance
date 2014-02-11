@@ -1,9 +1,3 @@
-// Update localStorage:
-function updateStorage(key) {
-	storage.set('TF' + key, window[key]);
-}
-
-
 // Update money total:
 var moneyTotal = 0;
 var totalEl = qs('.total');
@@ -33,10 +27,8 @@ function renderTransaction(transaction) {
 	// Add functionality to delete button:
 	on(qs('.delete button', tr), 'click', function() {
 		if (confirm('Delete?\n' + transaction.title)) {
-			tr.parentNode.removeChild(tr);
-			updateTotal(-transaction.amount);
 			transactions.remove(transaction);
-			updateStorage('transactions');
+			updateTotal(-transaction.amount);
 			updateGraph();
 		}
 	});
@@ -46,10 +38,10 @@ function renderTransaction(transaction) {
 
 
 // Grab transactions from localStorage (recent last):
-var transactions = storage.get('TFtransactions') || [];
+var transactions = new Arr('TFtransactions', null, 'date');
 
 // Add transactions to table (recent first):
-renderMultiple(transactions, renderTransaction, transactionsTbody);
+transactions.attach(renderTransaction, transactionsTbody);
 
 
 // Handle new income & payment form entries:
@@ -67,19 +59,9 @@ on(qs('.transaction-form'), 'submit', function(event) {
 		date: dashDate ? parseDashDate(dashDate).getTime() : startOfDay(ts),
 		timestamp: ts
 	};
-	
+
 	// Add the new transaction to the transactions array:
 	transactions.push(data);
-	// Sort transactions recent last:
-	transactions.sort(function(a, b) {
-		return a.date - b.date;
-	});
-	updateStorage('transactions');
-	
-	// Render the transaction and append to the DOM at the correct index:
-	var index = transactions.length - 1 - transactions.indexOf(data);
-	var tr = renderTransaction(data);
-	appendAtIndex(transactionsTbody, tr, index);
-	
+
 	updateGraph();
 });
