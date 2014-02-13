@@ -1,3 +1,7 @@
+// Grab transactions from localStorage (recent last):
+var transactions = new Arr('TFtransactions', null, 'date');
+
+
 // Update money total:
 var moneyTotal = 0;
 var totalEl = qs('.total');
@@ -7,7 +11,7 @@ function updateTotal(addend) {
 }
 
 
-// Render transactions:
+// Render transactions to table:
 var transactionsTbody = qs('.transactions');
 function renderTransaction(transaction) {
 	updateTotal(transaction.amount);
@@ -24,8 +28,13 @@ function renderTransaction(transaction) {
 		qs('.wallet', tr).textContent = wallet.name
 	});
 
-	// Add functionality to delete button:
-	on(qs('.delete button', tr), 'click', function() {
+	// Edit:
+	on(qs('.actions .edit', tr), 'click', function() {
+		startEdit(transaction);
+	});
+
+	// Delete:
+	on(qs('.actions .delete', tr), 'click', function() {
 		if (confirm('Delete?\n' + transaction.title)) {
 			transactions.remove(transaction);
 			updateTotal(-transaction.amount);
@@ -36,15 +45,11 @@ function renderTransaction(transaction) {
 	return tr;
 }
 
-
-// Grab transactions from localStorage (recent last):
-var transactions = new Arr('TFtransactions', null, 'date');
-
 // Add transactions to table (recent first):
 transactions.attach(renderTransaction, transactionsTbody);
 
 
-// Handle new income & payment form entries:
+// Handle new transaction form entries:
 on(qs('.transaction-form'), 'submit', function(event) {
 	// Don't submit the form:
 	event.preventDefault();
@@ -65,3 +70,59 @@ on(qs('.transaction-form'), 'submit', function(event) {
 
 	updateGraph();
 });
+
+
+
+
+// Edit transactions
+
+var transactionEditForm = qs('form.transaction-edit');
+
+var editBtn = qs('.data-stage .btns .edit');
+on(qs('.close-icon', editBtn), 'click', function(event) {
+	event.stopPropagation();
+	stopEdit();
+});
+
+var transactionBeingEdited;
+function startEdit(transaction) {
+	transactionBeingEdited = transaction;
+
+	// Stick the transaction data in the edit form:
+	transactionEditForm.title.value = transactionBeingEdited.title;
+	transactionEditForm.wallet.value = wallets[transactionBeingEdited.wallet].name;
+	transactionEditForm.amount.value = transactionBeingEdited.amount;
+	transactionEditForm.date.value = toDashDate(transactionBeingEdited.date);
+
+	editBtn.hidden = false;
+	editBtn.click();
+}
+
+function stopEdit() {
+	editBtn.hidden = true;
+	editBtn.previousElementSibling.click();
+}
+
+function handleTransactionEdit(event) {
+	// Don't submit the form:
+	event.preventDefault();
+
+	// Grab the transaction from the form:
+	var ts = Date.now();
+	var dashDate = this.date.value;
+	var data = {
+		title: this.title.value,
+		wallet: this.wallet.selectedIndex,
+		amount: +this.amount.value,
+		date: dashDate ? parseDashDate(dashDate).getTime() : startOfDay(ts),
+		timestamp: ts
+	};
+
+	// Replace old transaction object with new:
+	transactions.edit(transactionBeingEdited, data);
+
+	updateGraph();
+	
+	stopEdit()
+}
+on(transactionEditForm, 'submit', handleTransactionEdit);

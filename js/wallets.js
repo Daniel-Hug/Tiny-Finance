@@ -10,7 +10,7 @@ function renderWalletOption(data) {
 	return new Option(data.name);
 }
 
-wallets.attach(renderWalletOption, qs('.wallet-select'), true);
+wallets.attach(renderWalletOption, qsa('.wallet-select'), true);
 
 
 // Show list of wallets:

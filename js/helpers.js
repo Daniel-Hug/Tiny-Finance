@@ -70,6 +70,11 @@ function parseDashDate(str) {
 	return new Date(str.split('-').join('/'));
 }
 
+function toDashDate(ts) {
+    var local = new Date(ts);
+    return local.toJSON().slice(0,10);
+}
+
 var MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 function startOfDay(ts) {

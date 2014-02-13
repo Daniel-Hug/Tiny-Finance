@@ -1,3 +1,7 @@
+[hidden] {
+	display: none !important;
+}
+
 .box {
 	margin: 1.5em 0;
 }
@@ -15,12 +19,17 @@ body {
 
 
 /* Add income/payment Forms */
-.transaction-forms {
-	margin: 0 8px;
+.tabbed-panels {
+	margin: 1.2em 8px 0;
 
 	.panel {
 		border: 1px solid #ccc;
 		padding: 1em;
+		background: white;
+	}
+	
+	&:first-child {
+		margin-top: 0;
 	}
 }
 
@@ -32,6 +41,27 @@ body {
 	display: inline-block;
 }
 
+.close-icon {
+	display: inline-block;
+	border: 0;
+	padding: 0;
+	width: 16px;
+	height: 16px;
+	font-size: 14px;
+	line-height: 16px;
+	text-align: center;
+	border-radius: 50%;
+	color: white;
+	background: black;
+	box-shadow: none;
+	text-shadow: none;
+	cursor: pointer;
+	opacity: .25;
+
+	&:hover {
+		opacity: .5;
+	}
+}
 
 /* Data table */
 .data-stage {
@@ -42,17 +72,22 @@ body {
 	}
 }
 
-.data-stage, .graph {
-	width: 100%;
-	height: 500px;
+.data-stage {
+	.graph {
+		height: 500px;
+	}
+
+	.table {
+		padding: 0;
+	}
 }
 
 .transactions-table {
 	width: 100%;
 	border-collapse: collapse;
 	
-	tr {
-		border-top: 1px solid #ccc;
+	tbody tr {
+		border-bottom: 1px solid #ccc;
 	}
 
 	td, th {
@@ -71,15 +106,14 @@ body {
 		text-overflow: ellipsis;
 	}
 	
-	.delete {
+	.actions {
 		width: 16px;
 		padding: 0;
 
 		button {
 			height: 100%;
 			border: 0;
-			padding-top: 0;
-			padding-bottom: 0;
+			padding: 0 .4em;
 			background: none;
 			box-shadow: none;
 			text-shadow: none;
@@ -90,4 +124,7 @@ body {
 			}
 		}
 	}
+}
+
+form.transaction-edit {
 }

@@ -71,8 +71,11 @@
 		<div class="btns">
 			<button class="tab active">table</button>
 			<button class="tab">graph</button>
+			<button class="tab edit" hidden>edit <span class="close-icon">&times;</span></button>
 		</div>
-		<div class="panel active">
+
+		<!-- Table -->
+		<div class="panel table active">
 			<table class="transactions-table">
 				<tfoot>
 					<tr>
@@ -86,12 +89,40 @@
 						<td>{{amount}}</td>
 						<td title="{{date}}">{{relativeDate}}</td>
 						<td class="wallet">{{wallet}}</td>
-						<td class="delete"><button class="icon-remove"></button></td>
+						<td class="actions">
+							<button class="edit icon-pencil"></button><!--
+						 --><button class="delete icon-remove"></button>
+						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
+
+		<!-- Graph -->
 		<div class="panel graph"></div>
+
+		<!-- Edit form -->
+		<form class="panel grid transaction-edit">
+			<label class="field-row-top grid-u-3-5 gutter">
+				Title
+				<input class="grid-u-1" type="text" name="title" placeholder="Doc bills, salary, etc." required>
+			</label>
+			<label class="field-row-top grid-u-2-5">
+				Wallet
+				<select class="full-width wallet-select" name="wallet" required></select>
+			</label>
+			<label class="field-row grid-u-3-5 gutter">
+				Date
+				<input class="grid-u-1" type="date" name="date">
+			</label>
+			<label class="field-row grid-u-2-5">
+				Amount ($)
+				<input class="full-width" type="number" name="amount" min="-9999999" max="9999999" step=".01" placeholder="-5.95" required>
+			</label>
+			<div class="field-row">
+				<button class="grid-u-1" type="submit">Add</button>
+			</div>
+		</form>
 	</div>
 
 	<!-- JS -->

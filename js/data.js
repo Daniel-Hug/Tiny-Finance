@@ -8,6 +8,10 @@ var Obj = (function(map) {
 	}
 
 	return {
+		has: function(obj, key) {
+			return {}.hasOwnProperty.call(obj, key);
+		},
+		
 		subscribe: function(obj, fn, callNow) {
 			var index = getIndex(obj);
 			if (index === -1) {
@@ -27,9 +31,11 @@ var Obj = (function(map) {
 			else map.splice(getIndex(obj), 1);
 		},
 
-		set: function(obj, key, value) {
-			obj[key] = value;
-			Obj.changed(obj);
+		set: function(obj, keyOrNewObj, value) {
+			if (typeof keyOrNewObj === 'string') {
+				obj[keyOrNewObj] = value;
+				Obj.changed(obj);
+			} else Obj.changed(obj, keyOrNewObj);
 		},
 
 		unset: function(obj, key) {
@@ -37,9 +43,19 @@ var Obj = (function(map) {
 			Obj.changed(obj);
 		},
 
-		changed: function(obj) {
+		changed: function(obj, newObj) {
 			var index = getIndex(obj);
+			if (newObj !== undefined) {
+				for (var key in newObj) {
+					if (Obj.has(newObj, key)) obj[key] = newObj[key];
+				}
+			}
 			if (index === -1) return;
+			if (newObj !== undefined) {
+				for (var key in newObj) {
+					if (Obj.has(obj, key)) map[index][0][key] = obj[key];
+				}
+			}
 			var subscribers = map[index][1],
 			numSubscribers = subscribers.length;
 			for (var i = 0; i < numSubscribers; i++) {
@@ -109,26 +125,38 @@ Arr.prototype = {
 		}, this);
 	},
 	
-	edit: function(obj, key, value) {
-		Obj.set(obj, key, value);
+	edit: function(obj, keyOrNewObj, value) {
+		Obj.set(obj, keyOrNewObj, value);
 		this.updateStorage();
-		var arrIndex = this.indexOf(obj);
+		
+		// Remove object from array at old index:
+		var oldArrIndex = this.indexOf(obj);
+		this.splice(oldArrIndex, 1);
+		
+		// Add object back at new index:
+		var newArrIndex = this.sortKey ? sortedIndex(this, obj, this.sortKey) : oldArrIndex;
+		this.splice(newArrIndex, 0, obj);
+
 		var arrLength = this.length;
 		each(this.parasites, function(parasite) {
-			var elIndex = parasite.keepOrder ? arrIndex : arrLength - 1 - arrIndex;
-			parasite.parent.removeChild(parasite.parent.children[elIndex]);
-			var newChild = parasite.renderer(obj, arrIndex);
-			appendAtIndex(parasite.parent, newChild, elIndex);
+			var oldElIndex = parasite.keepOrder ? oldArrIndex : arrLength - 1 - oldArrIndex;
+			var newElIndex = parasite.keepOrder ? newArrIndex : arrLength - 1 - newArrIndex;
+			parasite.parent.removeChild(parasite.parent.children[oldElIndex]);
+			var newChild = parasite.renderer(obj, newArrIndex);
+			appendAtIndex(parasite.parent, newChild, newElIndex);
 		}, this);
 	},
 
-	attach: function(renderer, parent, keepOrder) {
-		this.parasites.push({
-			renderer: renderer,
-			parent: parent,
-			keepOrder: keepOrder
-		});
-		renderMultiple(this, renderer, parent, keepOrder);
+	attach: function(renderer, parents, keepOrder) {
+		if (parents.appendChild) parents = [parents];
+		each(parents, function(parent) {
+			this.parasites.push({
+				renderer: renderer,
+				parent: parent,
+				keepOrder: keepOrder
+			});
+			renderMultiple(this, renderer, parent, keepOrder);
+		}, this);
 	},
 
     indexOf: [].indexOf,
