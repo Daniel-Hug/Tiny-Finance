@@ -4,7 +4,7 @@ google.load('visualization', '1', {
 });
 
 var graphEl = qs('.graph'),
-	graphWrapper = graphEl.parentNode,
+	graphWrapper = qs('.data-stage'),
 	graphData, drawGraph;
 
 // Set up graph:
@@ -80,18 +80,42 @@ function graphInit() {
 	googLn = new google.visualization.LineChart(graphEl);
 
 	drawGraph = function drawGraph() {
+		var dateRange = graphData.getColumnRange(0);
+		var dollarRange = graphData.getColumnRange(1);
+		var vPadding = Math.ceil((dollarRange.max - dollarRange.min) * 0.02)
+		var width = graphWrapper.offsetWidth - 34;
 		googLn.draw(graphData, {
 			//curveType: "function",
-			width:  graphWrapper.offsetWidth,
-			height: graphWrapper.offsetHeight,
-			hAxis: { format: 'MMM d' },
-			vAxis: { maxValue: 10 },
-			legend: { position: 'bottom' }
+			title: 'Net Worth',
+			width:  width,
+			height: 0.8 * width,
+			hAxis: {
+				format: 'MMM d'
+				// 1 day before first:
+				,minValue: new Date(new Date(dateRange.min.getTime() - MS_PER_DAY / 2).setHours(0,0,0,0))
+				// 1 day after last:
+				,maxValue: new Date(new Date(dateRange.max.getTime() + MS_PER_DAY * 1.5).setHours(0,0,0,0))
+				//,textPosition: 'in'
+				,viewWindowMode: 'pretty'
+			},
+			vAxis: {
+				maxValue: dollarRange.max + vPadding
+				,minValue: dollarRange.min - vPadding
+				//,textPosition: 'in'
+			},
+			legend: 'none',
+			chartArea: {
+				top: '8%',
+				left: '10%',
+				width: '80%',
+				height: '86%'
+			},
+			pointSize: Math.ceil(width / 100)
 		});
 	};
 
 	updateGraph();
-	on(window, 'resize', debounce(drawGraph));
+	on(window, 'resize', debounce(drawGraph, 5));
 }
 
 

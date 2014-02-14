@@ -56,8 +56,17 @@ body {
   margin: 0 8px;
   text-align: right;
 }
+.data-stage .graph-wrapper {
+  height: 0;
+  padding-bottom: 80%;
+  position: relative;
+}
 .data-stage .graph {
-  height: 500px;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 .data-stage .table {
   padding: 0;
