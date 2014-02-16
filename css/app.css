@@ -1,111 +1,151 @@
 [hidden] {
-  display: none !important;
+	display: none !important;
 }
-.box {
-  margin: 1.5em 0;
-}
+
 .pull-right {
-  float: right;
+	float: right;
 }
+
 body {
-  overflow-y: scroll;
-  font: normal 16px/1.2 sans-serif;
-  margin: 8px 0 0;
-  background: white;
+	overflow-y: scroll;
+	font: normal 16px/1.2 sans-serif;
+	margin: 8px 0 0;
+	background: white;
 }
+
 /* Add income/payment Forms */
 .tabbed-panels {
-  margin: 1.2em 8px 0;
+	margin: 1.2em 8px 0;
 }
+
 .tabbed-panels .panel {
-  border: 1px solid #ccc;
-  padding: 1em;
-  background: white;
+	border: 1px solid #ccc;
+	padding: 1em;
+	background: white;
 }
+
 .tabbed-panels:first-child {
-  margin-top: 0;
+	margin-top: 0;
 }
+
 .field-row {
-  margin-top: 1.2em;
+	margin-top: 1.2em;
 }
+
+label.field-row input {
+	margin-top: 2px;
+}
+
 .wallet-list form.edit {
-  display: inline-block;
+	display: inline-block;
 }
+
+
+
+
+/*
+	Data Stage (transaction table, graph, transaction edit form)
+*/
+
+.data-stage .tabs {
+	margin: 0 8px;
+	text-align: right;
+}
+
+
+/* close icon for edit tab */
 .close-icon {
-  display: inline-block;
-  border: 0;
-  padding: 0;
-  width: 16px;
-  height: 16px;
-  font-size: 14px;
-  line-height: 16px;
-  text-align: center;
-  border-radius: 50%;
-  color: white;
-  background: black;
-  box-shadow: none;
-  text-shadow: none;
-  cursor: pointer;
-  opacity: .25;
+	display: inline-block;
+	border: 0;
+	padding: 0;
+	width: 16px;
+	height: 16px;
+	font-size: 14px;
+	line-height: 16px;
+	text-align: center;
+	border-radius: 50%;
+	color: white;
+	background: black;
+	box-shadow: none;
+	text-shadow: none;
+	cursor: pointer;
+	opacity: .25;
 }
+
 .close-icon:hover {
-  opacity: .5;
+	opacity: .5;
 }
-/* Data table */
-.data-stage .btns {
-  margin: 0 8px;
-  text-align: right;
-}
-.data-stage .graph-wrapper {
-  height: 0;
-  padding-bottom: 80%;
-  position: relative;
-}
-.data-stage .graph {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}
+
+
+
+
+/*
+	transactions table
+*/
+
 .data-stage .table {
-  padding: 0;
+	padding: 0;
 }
+
 .transactions-table {
-  width: 100%;
-  border-collapse: collapse;
+	width: 100%;
+	border-collapse: collapse;
 }
-.transactions-table tbody tr {
-  border-bottom: 1px solid #ccc;
+
+.transactions-table tr {
+	border-bottom: 1px solid #ccc;
 }
+
 .transactions-table td,
 .transactions-table th {
-  padding: 8px;
-  white-space: nowrap;
+	padding: 8px;
+	white-space: nowrap;
 }
+
 .transactions-table th {
-  font-weight: normal;
-  font-size: 1.2em;
+	font-weight: normal;
+	font-size: 1.2em;
 }
+
 .transactions-table td:first-child {
-  overflow: hidden;
-  white-space: normal;
-  text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: normal;
+	text-overflow: ellipsis;
 }
+
+
+/* transaction action buttons */
 .transactions-table .actions {
-  width: 16px;
-  padding: 0;
+	width: 16px;
+	padding: 0;
 }
+
 .transactions-table .actions button {
-  height: 100%;
-  border: 0;
-  padding: 0 .4em;
-  background: none;
-  box-shadow: none;
-  text-shadow: none;
-  opacity: 0.7;
+	height: 100%;
+	border: 0;
+	padding: 0 .4em;
+	background: none;
+	box-shadow: none;
+	text-shadow: none;
+	opacity: 0.7;
 }
+
 .transactions-table .actions button:hover {
-  opacity: 1;
+	opacity: 1;
 }
-/*# sourceMappingURL=style.map */
+
+
+/* graph */
+.data-stage .graph-wrapper {
+	height: 0;
+	padding-bottom: 80%;
+	position: relative;
+}
+
+.data-stage .graph {
+	position: absolute !important;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}

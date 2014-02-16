@@ -78,8 +78,9 @@ on(qs('.transaction-form'), 'submit', function(event) {
 
 var transactionEditForm = qs('form.transaction-edit');
 
-var editBtn = qs('.data-stage .btns .edit');
-on(qs('.close-icon', editBtn), 'click', function(event) {
+var editTab = qs('.data-stage .tabs .edit-tab');
+var tableTab = qs('.data-stage .tabs .table-tab');
+on(qs('.close-icon', editTab), 'click', function(event) {
 	event.stopPropagation();
 	stopEdit();
 });
@@ -94,13 +95,13 @@ function startEdit(transaction) {
 	transactionEditForm.amount.value = transactionBeingEdited.amount;
 	transactionEditForm.date.value = toDashDate(transactionBeingEdited.date);
 
-	editBtn.hidden = false;
-	editBtn.click();
+	editTab.hidden = false;
+	editTab.click();
 }
 
 function stopEdit() {
-	editBtn.hidden = true;
-	editBtn.previousElementSibling.click();
+	editTab.hidden = true;
+	tableTab.click();
 }
 
 function handleTransactionEdit(event) {
