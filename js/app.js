@@ -6,7 +6,7 @@ var transactions = new Arr('TFtransactions', null, 'date');
 var moneyTotal = 0;
 var totalEl = qs('.total');
 function updateTotal(addend) {
-	moneyTotal = stripNum(moneyTotal + addend)
+	moneyTotal = stripNum(moneyTotal + addend);
 	totalEl.textContent = formatMoney(moneyTotal);
 }
 
@@ -111,7 +111,7 @@ function handleTransactionEdit(event) {
 	// Grab the transaction from the form:
 	var ts = Date.now();
 	var dashDate = this.date.value;
-	var data = {
+	var newData = {
 		title: this.title.value,
 		wallet: this.wallet.selectedIndex,
 		amount: +this.amount.value,
@@ -119,11 +119,12 @@ function handleTransactionEdit(event) {
 		timestamp: ts
 	};
 
+	updateTotal(-transactionBeingEdited.amount);
+
 	// Replace old transaction object with new:
-	transactions.edit(transactionBeingEdited, data);
+	transactions.edit(transactionBeingEdited, newData);
 
 	updateGraph();
-	
-	stopEdit()
+	stopEdit();
 }
 on(transactionEditForm, 'submit', handleTransactionEdit);
