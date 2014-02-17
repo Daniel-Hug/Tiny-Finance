@@ -1,3 +1,11 @@
+/* base */
+body {
+	overflow-y: scroll;
+	font: normal 16px/1.2 sans-serif;
+	margin: 8px 0 0;
+	background: white;
+}
+
 [hidden] {
 	display: none !important;
 }
@@ -6,22 +14,10 @@
 	float: right;
 }
 
-body {
-	overflow-y: scroll;
-	font: normal 16px/1.2 sans-serif;
-	margin: 8px 0 0;
-	background: white;
-}
 
-/* Add income/payment Forms */
+/* module mods */
 .tabbed-panels {
 	margin: 1.2em 8px 0;
-}
-
-.tabbed-panels .panel {
-	border: 1px solid #ccc;
-	padding: 1em;
-	background: white;
 }
 
 .tabbed-panels:first-child {
@@ -32,10 +28,13 @@ body {
 	margin-top: 1.2em;
 }
 
-label.field-row input {
+label.field-row input,
+label.field-row-top input {
 	margin-top: 2px;
 }
 
+
+/* wallet list */
 .wallet-list form.edit {
 	display: inline-block;
 }
@@ -92,7 +91,7 @@ label.field-row input {
 	border-collapse: collapse;
 }
 
-.transactions-table tr {
+.transactions-table tbody tr {
 	border-bottom: 1px solid #ccc;
 }
 
