@@ -130,41 +130,10 @@
 	</div>
 
 	<!-- JS -->
-	<!--<script>
-	(function (win, doc, arr) {
-		'use strict';
-
-		var supported = {
-			Function__bind: 'bind' in Function.prototype,
-
-			Array__map: 'map' in arr,
-			Array__filter: 'filter' in arr,
-			Array__forEach: 'forEach' in arr,
-			Array__indexOf: 'indexOf' in arr,
-
-			Date_now: 'now' in Date,
-			Date__toISOString: 'toISOString' in Date.prototype,
-
-			String__trim: 'trim' in String.prototype,
-
-			Window__DOMTokenList: 'DOMTokenList' in win,
-			Window__Event: 'Event' in win || 'createEventObject' in doc,
-			Window__Event_ie8: 'Event' in win || !('createEventObject' in doc),
-			Window__Event_ie8_DOMContentLoaded: 'Event' in win || !('createEventObject' in doc),
-
-			Element__classList: 'classList' in doc.body,
-		};
-
-		for (var key in supported) {
-			if (!supported[key]) {
-				arr.push(key.replace(/_/g, '.'));
-			}
-		}
-
-		if (arr.length) doc.write('<' + 'script src="//polyfill.io/?' + arr.join() + '"><' + '/script>');
-	})(window, document, []);
-	</script>-->
-	<script src="http://polyfill.io/gimme(bind,indexOf,forEach,map,DOMTokenList)"></script>
+	<script>
+	if (!('classList' in document.body))
+		document.write('<' + 'script src="js/polyfills/classList.js"><' + '/script>');
+	</script>
 	<script src="https://www.google.com/jsapi"></script>
 	<script src="js/app-base.js"></script>
 	<script src="js/data.js"></script>
