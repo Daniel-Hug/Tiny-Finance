@@ -2,7 +2,9 @@
 body {
 	overflow-y: scroll;
 	font: normal 16px/1.2 sans-serif;
-	margin: 8px 0 0;
+	margin: 8px auto;
+	padding: 0 8px 0;
+	max-width: 600px;
 	background: white;
 }
 
@@ -17,7 +19,7 @@ body {
 
 /* module mods */
 .tabbed-panels {
-	margin: 1.2em 8px 0;
+	margin-top: 1.3125em;
 }
 
 .tabbed-panels:first-child {
@@ -25,12 +27,12 @@ body {
 }
 
 .field-row {
-	margin-top: 1.2em;
+	margin-top: 1.3125em;
 }
 
 label.field-row input,
 label.field-row-top input {
-	margin-top: 2px;
+	margin-top: 0.125em;
 }
 
 
@@ -47,7 +49,6 @@ label.field-row-top input {
 */
 
 .data-stage .tabs {
-	margin: 0 8px;
 	text-align: right;
 }
 
