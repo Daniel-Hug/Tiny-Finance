@@ -53,7 +53,7 @@ each(qsa('.tabbed-panels'), function(parent) {
 
 // http://stackoverflow.com/a/3644354/552067
 function stripNum(number) {
-    return (parseFloat(number.toPrecision(12)));
+	return (parseFloat(number.toPrecision(12)));
 }
 
 // Convert integer to $$$ format:
@@ -71,8 +71,9 @@ function parseDashDate(str) {
 }
 
 function toDashDate(ts) {
-    var local = new Date(ts);
-    return local.toJSON().slice(0,10);
+	var local = new Date(ts);
+	local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
+	return local.toJSON().slice(0,10);
 }
 
 var MS_PER_DAY = 1000 * 60 * 60 * 24;

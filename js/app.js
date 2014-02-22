@@ -128,3 +128,11 @@ function handleTransactionEdit(event) {
 	stopEdit();
 }
 on(transactionEditForm, 'submit', handleTransactionEdit);
+
+
+
+
+// Default value for all input[type=date]:
+each(qsa('input[type=date]'), function(dateInput) {
+	if (!dateInput.value) dateInput.value = toDashDate(Date.now());
+});
