@@ -68,13 +68,14 @@ var Obj = (function(map) {
 
 // Insert an object into a sorted array of similar objects.
 // Objects are sorted (least to greatest) by the property passed as the third argument.
-function sortedIndex(array, value, key) {
+function sortedIndex(array, objToInsert, key) {
 	var low = 0,
-		high = array.length;
+		high = array.length,
+		value = objToInsert[key];
 
 	while (low < high) {
 		var mid = (low + high) >>> 1;
-		if (array[mid][key] < value[key]) low = mid + 1;
+		if (value >= array[mid][key]) low = mid + 1;
 		else high = mid;
 	}
 	return low;
