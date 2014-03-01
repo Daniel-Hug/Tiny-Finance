@@ -97,11 +97,11 @@ function graphInit() {
 				,maxValue: new Date(new Date(dateRange.max.getTime() + MS_PER_DAY * 1.5).setHours(0,0,0,0))
 				//,textPosition: 'in'
 			},
-			vAxis: {
+			/*vAxis: {
 				maxValue: dollarRange.max + vPadding
 				,minValue: dollarRange.min - vPadding
 				//,textPosition: 'in'
-			},
+			},*/
 			legend: 'none',
 			chartArea: {
 				top: '8%',
