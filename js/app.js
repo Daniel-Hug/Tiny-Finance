@@ -62,7 +62,8 @@ on(qs('.transaction-form'), 'submit', function(event) {
 		wallet: this.wallet.selectedIndex,
 		amount: +this.amount.value,
 		date: dashDate ? parseDashDate(dashDate).getTime() : startOfDay(ts),
-		timestamp: ts
+		timestamp: ts,
+		edits: []
 	};
 
 	// Add the new transaction to the transactions array:
@@ -108,15 +109,20 @@ function handleTransactionEdit(event) {
 	// Don't submit the form:
 	event.preventDefault();
 
+	var edits = transactionBeingEdited.edits ? [].slice.call(transactionBeingEdited.edits) : [];
+	delete transactionBeingEdited.edits;
+	edits.push(transactionBeingEdited);
+	edits = JSON.parse(JSON.stringify(edits));
+
 	// Grab the transaction from the form:
 	var ts = Date.now();
-	var dashDate = this.date.value;
 	var newData = {
 		title: this.title.value,
 		wallet: this.wallet.selectedIndex,
 		amount: +this.amount.value,
-		date: dashDate ? parseDashDate(dashDate).getTime() : startOfDay(ts),
-		timestamp: ts
+		date: parseDashDate(this.date.value).getTime(),
+		timestamp: ts,
+		edits: edits
 	};
 
 	updateTotal(-transactionBeingEdited.amount);
