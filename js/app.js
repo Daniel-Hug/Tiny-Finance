@@ -25,7 +25,7 @@ function renderTransaction(transaction) {
 	});
 
 	Obj.subscribe(wallets[transaction.wallet], function(wallet) {
-		qs('.wallet', tr).textContent = wallet.name
+		qs('.wallet', tr).textContent = wallet.name;
 	});
 
 	// Edit:

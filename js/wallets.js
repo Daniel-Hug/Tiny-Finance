@@ -16,7 +16,7 @@ wallets.attach(renderWalletOption, qsa('.wallet-select'), true);
 // Show list of wallets:
 function renderWallet(data, index) {
 	var walletRow = tmp.wallet(data);
-	var button = qs('button', walletRow)
+	var button = qs('button', walletRow);
 
 	// Edit wallet name:
 	on(qs('form.edit', walletRow), 'submit', function(event) {
@@ -25,9 +25,9 @@ function renderWallet(data, index) {
 	});
 
 	// Remove wallet:
-// 	on(qs('.delete', walletRow), 'click', function(event) {
-// 		wallets.remove(data);
-// 	});
+//	on(qs('.delete', walletRow), 'click', function(event) {
+//		wallets.remove(data);
+//	});
 
 	return walletRow;
 }
