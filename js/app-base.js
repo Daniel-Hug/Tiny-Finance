@@ -108,8 +108,8 @@ function renderMultiple(arr, renderer, parent, keepOrder) {
 	if (!arr.length) return;
 	var renderedEls = map(arr, renderer),
 		docFrag = document.createDocumentFragment(),
-		l = renderedEls.length;
-	if (keepOrder) for (var i = 0; i < l; i++) docFrag.appendChild(renderedEls[i]);
+		l = renderedEls.length, i;
+	if (keepOrder) for (i = 0; i < l; i++) docFrag.appendChild(renderedEls[i]);
 	else while (l--) docFrag.appendChild(renderedEls[l]);
 	removeChilds(parent);
 	parent.appendChild(docFrag);

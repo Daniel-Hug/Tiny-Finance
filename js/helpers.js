@@ -53,7 +53,7 @@ each(qsa('.tabbed-panels'), function(parent) {
 
 // http://stackoverflow.com/a/3644354/552067
 function stripNum(number) {
-	return (parseFloat(number.toPrecision(12)));
+	return parseFloat(number.toPrecision(12));
 }
 
 // Convert integer to $$$ format:

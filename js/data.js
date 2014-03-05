@@ -57,7 +57,7 @@ Arr.prototype = {
 			parasite.parent.removeChild(parasite.parent.children[elIndex]);
 		}, this);
 	},
-	
+
 	edit: function(obj, keyOrNewObj, value) {
 		Obj.set(obj, keyOrNewObj, value);
 		this.updateStorage();
