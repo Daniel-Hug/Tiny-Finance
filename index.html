@@ -52,15 +52,26 @@
 					<button class="grid-u-1" type="submit">Add wallet</button>
 				</div>
 			</form>
-			<ul class="wallet-list">
-				<li data-tmp="wallet">
-				<!--<button class="edit icon-pencil"></button>-->
-				<!--<button class="delete icon-remove"></button>-->
-					<form class="edit">
-						<input type="text" value="{{name}}" name="name">
-					</form>
-				</li>
-			</ul>
+			<table class="wallet-table">
+				<tbody>
+					<tr data-tmp="wallet">
+						<td><button class="icon-pencil"><span class="ir">edit</span></button></td>
+						<td>
+							<form>
+								<input type="text" value="{{name}}" name="name" disabled>
+							</form>
+						</td>
+						<td>{{balance}}</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td class="total-label">Total: </td>
+						<td class="total" colspan="4">$0</td>
+					</tr>
+				</tfoot>
+			</table>
 		</div>
 	</div>
 
@@ -135,8 +146,8 @@
 	<script src="js/object-subscribe/obj.js"></script>
 	<script src="js/data.js"></script>
 	<script src="js/helpers.js"></script>
-	<script src="js/wallets.js"></script>
 	<script src="js/app.js"></script>
+	<script src="js/wallets.js"></script>
 	<script src="js/graph.js"></script>
 </body>
 

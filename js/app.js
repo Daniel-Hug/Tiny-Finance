@@ -1,21 +1,35 @@
 // Grab transactions from localStorage (recent last):
 var transactions = new Arr('TFtransactions', null, 'date');
 
+// Grab wallets from localStorage (recent last):
+var wallets = new Arr('TFwallets', [{
+	name: 'wallet',
+	balance: 0,
+	timestamp: Date.now()
+}]);
 
-// Update money total:
+
+// Update wallet balance and money total:
 var moneyTotal = 0;
-var totalEl = qs('.total');
-function updateTotal(addend) {
+var totalEls = qsa('.total');
+function updateTotal(walletIndex, addend) {
+	// Update wallet balance:
+	var walletBalance = wallets[walletIndex].balance || 0;
+	wallets.edit(wallets[walletIndex], {
+		balance: stripNum(walletBalance + addend)
+	});
+
+	// Update full total:
 	moneyTotal = stripNum(moneyTotal + addend);
-	totalEl.textContent = formatMoney(moneyTotal);
+	each(totalEls, function(el) {
+		el.textContent = formatMoney(moneyTotal);
+	});
 }
 
 
 // Render transactions to table:
 var transactionsTbody = qs('.transactions');
 function renderTransaction(transaction) {
-	updateTotal(transaction.amount);
-
 	var tr = tmp.transaction({
 		title: transaction.title,
 		amount: formatMoney(transaction.amount),
@@ -37,7 +51,7 @@ function renderTransaction(transaction) {
 	on(qs('.actions .delete', tr), 'click', function() {
 		if (confirm('Delete?\n' + transaction.title)) {
 			transactions.remove(transaction);
-			updateTotal(-transaction.amount);
+			updateTotal(walletIndex, -transaction.amount);
 			updateGraph();
 		}
 	});
@@ -57,7 +71,7 @@ on(qs('.transaction-form'), 'submit', function(event) {
 	// Grab the transaction from the form:
 	var ts = Date.now();
 	var dashDate = this.date.value;
-	var data = {
+	var transaction = {
 		title: this.title.value,
 		wallet: this.wallet.selectedIndex,
 		amount: +this.amount.value,
@@ -67,7 +81,8 @@ on(qs('.transaction-form'), 'submit', function(event) {
 	};
 
 	// Add the new transaction to the transactions array:
-	transactions.push(data);
+	transactions.push(transaction);
+	updateTotal(transaction.wallet, transaction.amount);
 
 	updateGraph();
 });
@@ -79,8 +94,8 @@ on(qs('.transaction-form'), 'submit', function(event) {
 
 var transactionEditForm = qs('form.transaction-edit');
 
-var editTab = qs('.data-stage .tabs .edit-tab');
-var tableTab = qs('.data-stage .tabs .table-tab');
+var editTab = qs('.data-stage .edit-tab');
+var tableTab = qs('.data-stage .table-tab');
 on(qs('.close-icon', editTab), 'click', function(event) {
 	event.stopPropagation();
 	stopEdit();
@@ -125,7 +140,9 @@ function handleTransactionEdit(event) {
 		edits: edits
 	};
 
-	updateTotal(-transactionBeingEdited.amount);
+	// Remove money from old wallet and place in new:
+	updateTotal(transactionBeingEdited.wallet, -transactionBeingEdited.amount);
+	updateTotal(newData.wallet, newData.amount);
 
 	// Replace old transaction object with new:
 	transactions.edit(transactionBeingEdited, newData);

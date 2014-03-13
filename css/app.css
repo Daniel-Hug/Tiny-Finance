@@ -16,6 +16,12 @@ body {
 	float: right;
 }
 
+.ir {
+	font: 0/0 a;
+	text-shadow: none;
+	color: transparent;
+}
+
 
 /* module mods */
 .tabbed-panels {
@@ -37,10 +43,25 @@ label.field-row-top input {
 
 
 /* wallet list */
-.wallet-list form.edit {
+.wallet-table {
+	margin-top: 1em;
+}
+
+.wallet-table form {
 	display: inline-block;
 }
 
+.wallet-table form [disabled] {
+	background: none;
+	border-color: transparent;
+	cursor: text;
+}
+
+.wallet-table .total-label {
+	padding: .375em; /* input padding */
+	text-indent: 1px; /* td padding */
+	height: 2.2em;
+}
 
 
 
