@@ -1,9 +1,3 @@
-Array.prototype.remove = function(item) {
-	this.splice(this.indexOf(item), 1);
-	return this;
-};
-
-
 function appendAtIndex(parent, newChild, index) {
 	var nextSibling = parent.children[index];
 	parent.insertBefore(newChild, nextSibling);
@@ -65,6 +59,10 @@ function formatMoney(int) {
 		'$' + ( int % 1 ? int.toFixed(2) : int );
 }
 
+
+
+// Date helpers:
+
 // get a Date object from an input[type=date] value:
 function parseDashDate(str) {
 	return new Date(str.split('-').join('/'));
@@ -81,6 +79,15 @@ var MS_PER_DAY = 1000 * 60 * 60 * 24;
 function startOfDay(ts) {
 	var date = ts ? new Date(ts) : new Date();
 	return date.setHours(0,0,0,0);
+}
+
+// subtractDay and addDay accept a timestamp or Date object for the start of a day
+// and return a timestamp for the start of the previous or next day respectively:
+function subtractDay(ts) {
+	return startOfDay(ts - .5 * MS_PER_DAY)
+}
+function addDay(ts) {
+	return startOfDay(+ts + 1.5 * MS_PER_DAY)
 }
 
 function getDayDiff(a, b) {
@@ -100,7 +107,7 @@ function daysAgo(day) {
 			'today');
 }
 
-// Convert timestamp into a date string looking like this: "Wed, Jun 5, 2013":
+// Convert a timestamp or Date object into a string like this: "Wed, Jun 5, 2013"
 function formatDate(date) {
 	var parts = new Date(date).toDateString().split(' ');
 	parts[0] += ',';
