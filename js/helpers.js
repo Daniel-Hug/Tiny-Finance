@@ -18,37 +18,11 @@ function debounce(fn, delay, timer) {
 }
 
 
-// toggleable tabbed panels
-each(qsa('.tabbed-panels'), function(parent) {
-	var tabs = qsa('.tab', parent);
-	var panels = qsa('.panel', parent);
-	var closeable = parent.classList.contains('closeable');
-	each(tabs, function(tab, i) {
-		on(tab, 'click', function() {
-			each(tabs, function(tab) {
-				if (tab !== this) tab.classList.remove('active');
-			}, this);
-			
-			if (closeable) {
-				var isActive = this.classList.toggle('active');
-				parent.classList[isActive ? 'add' : 'remove']('active');
-			} else {
-				this.classList.add('active');
-				parent.classList.add('active');
-			}
-			
-			each(panels, function(panel, j) {
-				panel.classList[j === i ? (closeable ? 'toggle' : 'add') : 'remove']('active');
-			});
-		});
-	});
-});
-
-
 // http://stackoverflow.com/a/3644354/552067
 function stripNum(number) {
 	return parseFloat(number.toPrecision(12));
 }
+
 
 // Convert integer to $$$ format:
 // -0.3 -> -$0.30

@@ -1,3 +1,6 @@
 [submodule "js/object-subscribe"]
 	path = js/object-subscribe
 	url = https://github.com/Daniel-Hug/object-subscribe.git
+[submodule "js/tabbed-panels"]
+	path = js/tabbed-panels
+	url = http://github.com/daniel-hug/tabbed-panels
