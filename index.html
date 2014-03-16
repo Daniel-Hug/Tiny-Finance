@@ -22,6 +22,9 @@
 </head>
 
 <body>
+
+	<h1>Tiny Finance</h1>
+
 	<div class="transaction-forms tabbed-panels active closeable">
 		<div class="tabs">
 			<button class="tab active">Add Transaction</button>
@@ -83,9 +86,24 @@
 		</div>
 	</div>
 
+	<h2>Transaction history</h2>
+
 	<!-- Data visualizations -->
 	<div class="data-stage tabbed-panels box active">
 		<div class="tabs">
+			<div class="filters tabbed-panels hovering closeable">
+				<strong>Filter:</strong>
+				<button class="tab">by wallet</button>
+				<button class="tab">by label(s)</button>
+
+				<div class="panel">
+					<ul class="plain filter-list"></ul>
+				</div>
+
+				<div class="panel">
+					<h4 style="margin: .4em 0; border: 0;">Coming soon!</h4>
+				</div>
+			</div>
 			<button class="tab table-tab active">table</button>
 			<button class="tab">graph</button>
 			<button class="tab edit-tab" hidden>edit <span class="close-icon">&times;</span></button>
@@ -101,7 +119,7 @@
 					</tr>
 				</tfoot>
 				<tbody class="transactions">
-					<tr data-tmp="transaction">
+					<tr data-tmp="transaction" id="tr_{{timestamp}}">
 						<td>{{title}}</td>
 						<td>{{amount}}</td>
 						<td title="{{date}}">{{relativeDate}}</td>

@@ -1,4 +1,4 @@
-/* base */
+/* base element styles */
 body {
 	overflow-y: scroll;
 	font: normal 16px/1.2 sans-serif;
@@ -8,10 +8,28 @@ body {
 	background: white;
 }
 
-[hidden] {
+h1 { font-size:   2.4em; } /* 2.4em * (5 / 6)^0 */
+h2 { font-size:     2em; } /* 2.4em * (5 / 6)^1 */
+h3 { font-size: 1.666em; } /* 2.4em * (5 / 6)^2 */
+h4 { font-size: 1.388em; } /* 2.4em * (5 / 6)^3 */
+h5 { font-size: 1.157em; } /* 2.4em * (5 / 6)^4 */
+
+h1 {
+	text-align: center;
+}
+
+h2, h3, h4, h5, h6 {
+	line-height: 1.7;
+	border-bottom: 1px solid #ddd;
+	margin: 1.2em 0 12px;
+}
+
+[hidden], [data-tmp] {
 	display: none !important;
 }
 
+
+/* helper classes */
 .pull-right {
 	float: right;
 }
@@ -20,6 +38,13 @@ body {
 	font: 0/0 a;
 	text-shadow: none;
 	color: transparent;
+}
+
+ul.plain,
+ol.plain {
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 
@@ -37,8 +62,10 @@ body {
 }
 
 label.field-row input,
-label.field-row-top input {
-	margin-top: 0.125em;
+label.field-row-top input,
+label.field-row select,
+label.field-row-top select {
+	margin-top: 0.12em;
 }
 
 
@@ -71,6 +98,27 @@ label.field-row-top input {
 
 .data-stage .tabs {
 	text-align: right;
+}
+
+
+/* tabs for filtering transactions in data-stage */
+.filters {
+	float: left;
+	text-align: left;
+}
+
+.filters .tab {
+	font-size: .8em;
+	vertical-align: middle;
+}
+
+.filters .tab:after {
+	content: ' ▼';
+	vertical-align: middle;
+}
+
+.filters .panel {
+	width: 100%;
 }
 
 

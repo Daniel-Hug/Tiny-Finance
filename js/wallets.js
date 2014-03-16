@@ -2,7 +2,6 @@
 function renderWalletOption(data) {
 	return new Option(data.name);
 }
-
 wallets.attach(renderWalletOption, qsa('.wallet-select'), true);
 
 
@@ -39,8 +38,37 @@ function renderWallet(data, index) {
 
 	return walletRow;
 }
-
 wallets.attach(renderWallet, walletTbody);
+
+
+// An array of the checked wallets (all are checked to start):
+var walletFiltersParent = qs('.filter-list');
+
+function renderWalletFilter(wallet) {
+	var li = document.createElement('li');
+	var label = document.createElement('label');
+	var checkbox = document.createElement('input');
+
+	checkbox.setAttribute('type', 'checkbox');
+	checkbox.checked = true;
+	label.textContent = ' ' + wallet.name;
+	prependAInB(checkbox, label);
+	li.appendChild(label);
+
+	on(checkbox, 'change', function() {
+		var checkedWallets = [];
+		each(qsa('input[type=checkbox]', walletFiltersParent), function(checkbox, walletIndex) {
+			if (checkbox.checked) checkedWallets.push(walletIndex);
+		});
+		var filteredTransactions = [].filter.call(transactions, function(transaction) {
+			return checkedWallets.indexOf(transaction.wallet) >= 0;
+		});
+		renderMultiple(filteredTransactions, renderTransaction, transactionsTbody);
+	});
+
+	return li;
+}
+wallets.attach(renderWalletFilter, walletFiltersParent, true);
 
 
 // Handle new wallet entries:

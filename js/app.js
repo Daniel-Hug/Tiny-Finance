@@ -1,17 +1,21 @@
 // Grab transactions from localStorage (recent last):
-var transactions = new Arr('TFtransactions', null, 'date');
+var transactions = new Arr({
+	storageID: 'TFtransactions', 
+	sortKey: 'date'
+});
 
 // Grab wallets from localStorage (recent last):
-var wallets = new Arr('TFwallets', [{
-	name: 'wallet',
-	balance: 0,
-	timestamp: Date.now()
-}]);
+var wallets = new Arr({
+	storageID: 'TFwallets',
+	fallback: [{
+		name: 'wallet',
+		balance: 0,
+		timestamp: Date.now()
+	}]
+});
 
 
 // Update wallet balance and money total:
-var moneyTotal = 0;
-var totalEls = qsa('.total');
 function updateTotal(walletIndex, addend) {
 	// Update wallet balance:
 	var walletBalance = wallets[walletIndex].balance || 0;
@@ -21,10 +25,20 @@ function updateTotal(walletIndex, addend) {
 
 	// Update full total:
 	moneyTotal = stripNum(moneyTotal + addend);
+	updateFullTotal();
+}
+
+var moneyTotal = [].reduce.call(transactions, function (runningTotal, transaction) {
+	return stripNum((runningTotal.amount || runningTotal) + transaction.amount);
+});
+
+var totalEls = qsa('.total');
+function updateFullTotal() {
 	each(totalEls, function(el) {
 		el.textContent = formatMoney(moneyTotal);
 	});
 }
+updateFullTotal();
 
 
 // Render transactions to table:
@@ -32,6 +46,7 @@ var transactionsTbody = qs('.transactions');
 function renderTransaction(transaction) {
 	var tr = tmp.transaction({
 		title: transaction.title,
+		timestamp: transaction.timestamp,
 		amount: formatMoney(transaction.amount),
 		relativeDate: daysAgo(transaction.date),
 		date: formatDate(transaction.date),

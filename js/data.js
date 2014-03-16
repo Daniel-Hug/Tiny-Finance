@@ -15,16 +15,16 @@ function sortedIndex(array, objToInsert, key) {
 
 
 // Bind an array of Data objects to the DOM:
-function Arr(storageIDOrArray, def, sortKey) {
+function Arr(options) {
 	var arr;
-	if (typeof storageIDOrArray === 'string') {
-		arr = storage.get(storageIDOrArray) || def || [];
-		this.storageID = storageIDOrArray;
+	if (options.storageID) {
+		arr = storage.get(options.storageID) || options.fallback || [];
+		this.storageID = options.storageID;
 	}
-	else arr = storageIDOrArray;
+	else arr = options.data;
 	[].push.apply(this, arr);
 	this.parasites = [];
-	if (sortKey) this.sortKey = sortKey;
+	if (options.sortKey) this.sortKey = options.sortKey;
 }
 
 Arr.prototype = {
@@ -61,11 +61,11 @@ Arr.prototype = {
 	edit: function(obj, keyOrNewObj, value) {
 		Obj.set(obj, keyOrNewObj, value);
 		this.updateStorage();
-		
+
 		// Remove object from array at old index:
 		var oldArrIndex = this.indexOf(obj);
 		this.splice(oldArrIndex, 1);
-		
+
 		// Add object back at new index:
 		var newArrIndex = this.sortKey ? sortedIndex(this, obj, this.sortKey) : oldArrIndex;
 		this.splice(newArrIndex, 0, obj);

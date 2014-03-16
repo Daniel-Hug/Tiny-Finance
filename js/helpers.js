@@ -58,10 +58,10 @@ function startOfDay(ts) {
 // subtractDay and addDay accept a timestamp or Date object for the start of a day
 // and return a timestamp for the start of the previous or next day respectively:
 function subtractDay(ts) {
-	return startOfDay(ts - .5 * MS_PER_DAY)
+	return startOfDay(ts - 0.5 * MS_PER_DAY);
 }
 function addDay(ts) {
-	return startOfDay(+ts + 1.5 * MS_PER_DAY)
+	return startOfDay(+ts + 1.5 * MS_PER_DAY);
 }
 
 function getDayDiff(a, b) {
