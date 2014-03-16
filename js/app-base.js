@@ -105,7 +105,6 @@ function removeChilds(parent) {
 }
 
 function renderMultiple(arr, renderer, parent, keepOrder) {
-	if (!arr.length) return;
 	var renderedEls = map(arr, renderer),
 		docFrag = document.createDocumentFragment(),
 		l = renderedEls.length, i;

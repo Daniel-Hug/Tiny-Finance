@@ -44,7 +44,20 @@ wallets.attach(renderWallet, walletTbody);
 // An array of the checked wallets (all are checked to start):
 var walletFiltersParent = qs('.filter-list');
 
+var changeTransactionFilter = debounce(function() {
+	var checkedWallets = [];
+	each(qsa('input[type=checkbox]', walletFiltersParent), function(checkbox, walletIndex) {
+		if (checkbox.checked) checkedWallets.push(walletIndex);
+	});
+	var filteredTransactions = [].filter.call(transactions, function(transaction) {
+		return checkedWallets.indexOf(transaction.wallet) >= 0;
+	});
+	renderMultiple(filteredTransactions, renderTransaction, transactionsTbody);
+	updateGraph(filteredTransactions);
+}, 10);
+
 function renderWalletFilter(wallet) {
+	// Create the checkbox list item:
 	var li = document.createElement('li');
 	var label = document.createElement('label');
 	var checkbox = document.createElement('input');
@@ -55,20 +68,23 @@ function renderWalletFilter(wallet) {
 	prependAInB(checkbox, label);
 	li.appendChild(label);
 
-	on(checkbox, 'change', function() {
-		var checkedWallets = [];
-		each(qsa('input[type=checkbox]', walletFiltersParent), function(checkbox, walletIndex) {
-			if (checkbox.checked) checkedWallets.push(walletIndex);
-		});
-		var filteredTransactions = [].filter.call(transactions, function(transaction) {
-			return checkedWallets.indexOf(transaction.wallet) >= 0;
-		});
-		renderMultiple(filteredTransactions, renderTransaction, transactionsTbody);
-	});
+	// Filter transactions when a checkbox is clicked:
+	on(checkbox, 'change', changeTransactionFilter);
 
 	return li;
 }
 wallets.attach(renderWalletFilter, walletFiltersParent, true);
+
+// "Toggle Selected" button:
+each(qsa('.toggle-check'), function (toggleBtn) {
+	on(toggleBtn, 'click', function() {
+		each(this.nextElementSibling.children, function (li) {
+			var checkbox = li.firstChild.firstChild;
+			checkbox.checked = !checkbox.checked;
+			changeTransactionFilter();
+		});
+	});
+});
 
 
 // Handle new wallet entries:

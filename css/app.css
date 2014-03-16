@@ -40,8 +40,7 @@ h2, h3, h4, h5, h6 {
 	color: transparent;
 }
 
-ul.plain,
-ol.plain {
+.plain-list {
 	margin: 0;
 	padding: 0;
 	list-style: none;
@@ -66,6 +65,10 @@ label.field-row-top input,
 label.field-row select,
 label.field-row-top select {
 	margin-top: 0.12em;
+}
+
+.small-btn {
+	font-size: .8em;
 }
 
 
@@ -108,7 +111,6 @@ label.field-row-top select {
 }
 
 .filters .tab {
-	font-size: .8em;
 	vertical-align: middle;
 }
 
@@ -119,6 +121,10 @@ label.field-row-top select {
 
 .filters .panel {
 	width: 100%;
+}
+
+.filter-list {
+	margin-top: 1em;
 }
 
 

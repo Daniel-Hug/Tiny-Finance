@@ -15,7 +15,7 @@ google.setOnLoadCallback(graphInit);
 // The 30 arrays represent the last 30 days.
 // The first item in each is that day's timestamp.
 // The second item in each is the dollar subtotal for that day.
-function subtotalsByDay() {
+function subtotalsByDay(transactions) {
 	var defaultDay = [startOfDay(), 0];
 	var days = [transactions.length ? [
 		transactions[0].date,
@@ -58,8 +58,8 @@ function subtotalsByDay() {
 }
 
 
-function formatDaysForTable() {
-	var days = subtotalsByDay().map(function(day) {
+function formatDaysForTable(transactions) {
+	var days = subtotalsByDay(transactions).map(function(day) {
 		day[0] = new Date(day[0]);
 		return day;
 	});
@@ -119,7 +119,7 @@ function graphInit() {
 }
 
 
-function updateGraph() {
-	graphData = formatDaysForTable();
+function updateGraph(filteredTransactions) {
+	graphData = formatDaysForTable(filteredTransactions || transactions);
 	drawGraph();
 }
