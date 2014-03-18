@@ -25,21 +25,23 @@ function updateTotal(walletIndex, addend) {
 	});
 
 	// Update full total:
-	moneyTotal = stripNum(moneyTotal + addend);
-	updateFullTotal();
+	updateFullTotal(stripNum(moneyTotal + addend));
 }
 
-var moneyTotal = transactions.length ? [].reduce.call(transactions, function (runningTotal, transaction) {
-	return stripNum((runningTotal.amount || runningTotal) + transaction.amount);
-}) : 0;
-
 var totalEls = qsa('.total');
-function updateFullTotal() {
+function updateFullTotal(moneyTotal) {
 	each(totalEls, function(el) {
 		el.textContent = formatMoney(moneyTotal);
 	});
 }
-updateFullTotal();
+
+function calculateTotalFromTransactions(transactions) {
+	return [].reduce.call(transactions, function (runningTotal, transaction) {
+		return stripNum(runningTotal + transaction.amount);
+	}, 0);
+}
+
+updateFullTotal(calculateTotalFromTransactions(transactions));
 
 
 

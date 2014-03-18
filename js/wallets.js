@@ -54,6 +54,7 @@ var changeTransactionFilter = debounce(function() {
 	});
 	renderMultiple(filteredTransactions, renderTransaction, transactionsTbody);
 	updateGraph(filteredTransactions);
+	updateFullTotal(calculateTotalFromTransactions(filteredTransactions));
 }, 10);
 
 function renderWalletFilter(wallet) {
