@@ -2,10 +2,17 @@
 body {
 	overflow-y: scroll;
 	font: normal 16px/1.2 sans-serif;
-	margin: 8px auto;
-	padding: 0 8px 0;
+	margin: 2.8em auto;
+	padding: 0 8px 8px;
 	max-width: 600px;
+	min-width: 480px;
 	background: white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	line-height: 1.7;
+	border-bottom: 1px solid #ddd;
+	margin: 1.2em 0 12px;
 }
 
 h1 { font-size:   2.4em; } /* 2.4em * (5 / 6)^0 */
@@ -14,22 +21,17 @@ h3 { font-size: 1.666em; } /* 2.4em * (5 / 6)^2 */
 h4 { font-size: 1.388em; } /* 2.4em * (5 / 6)^3 */
 h5 { font-size: 1.157em; } /* 2.4em * (5 / 6)^4 */
 
-h1 {
-	text-align: center;
-}
-
-h2, h3, h4, h5, h6 {
-	line-height: 1.7;
-	border-bottom: 1px solid #ddd;
-	margin: 1.2em 0 12px;
-}
-
 [hidden], [data-tmp] {
 	display: none !important;
 }
 
 
+
 /* helper classes */
+.box {
+	margin-top: 1.3125em;
+}
+
 .pull-right {
 	float: right;
 }
@@ -46,16 +48,76 @@ h2, h3, h4, h5, h6 {
 	list-style: none;
 }
 
-
-/* module mods */
-.tabbed-panels {
-	margin-top: 1.3125em;
+/* Clearfix */
+.cf { *zoom:1 }
+.cf:after {
+	content: "";
+	display: table;
+	clear: both;
 }
 
-.tabbed-panels:first-child {
+body .logged-out,
+body .logged-in {
+	display: none;
+}
+
+body.logged-in .logged-in,
+body.logged-out .logged-out {
+	display: block;
+}
+
+.drop-tri:after {
+	content: ' ▼';
+	vertical-align: middle;
+}
+
+
+
+.header {
+	position: relative;
+	vertical-align: middle;
+}
+
+
+/* branding at the top */
+.brand {
 	margin-top: 0;
 }
 
+
+/* "Sign In with Google" button */
+.googLoginBtn {
+	position: absolute;
+	right: 0;
+	top: 1.2em;
+	height: 2.4em;
+	border: none;
+	color: white;
+	background: hsl(7, 71%, 55%);
+	border-radius: 5px;
+	box-shadow: none !important;
+	text-shadow: none;
+	cursor: pointer;
+}
+
+.googLoginBtn:hover {
+	background: hsl(7, 78%, 56%);
+}
+
+.user-drop {
+	position: absolute;
+	right: 0;
+	top: 0.64em;
+	margin-top: 0;
+}
+
+.user-drop .panel {
+	text-align: center;
+}
+
+
+
+/* module mods */
 .field-row {
 	margin-top: 1.3125em;
 }
@@ -70,6 +132,7 @@ label.field-row-top select {
 .small-btn {
 	font-size: .8em;
 }
+
 
 
 /* wallet list */
@@ -112,15 +175,6 @@ label.field-row-top select {
 
 .filters .tab {
 	vertical-align: middle;
-}
-
-.filters .tab:after {
-	content: ' ▼';
-	vertical-align: middle;
-}
-
-.filters .panel {
-	width: 100%;
 }
 
 .filter-list {
