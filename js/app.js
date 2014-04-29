@@ -20,8 +20,7 @@
 		storageID: 'TFwallets',
 		fallback: [{
 			name: 'wallet',
-			balance: 0,
-			timestamp: Date.now()
+			balance: 0
 		}]
 	});
 

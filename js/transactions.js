@@ -1,4 +1,4 @@
-/* global ensureType, DDS, Parasite, dataStage, transactions, wallets, tmp, qs, on, updateTotal, formatMoney, formatDate, updateGraph, daysAgo, toDashDate, parseDashDate, startOfDay, Obj */
+/* global ensureType, Parasite, dataStage, transactions, wallets, tmp, qs, on, updateTotal, formatMoney, formatDate, updateGraph, daysAgo, toDashDate, parseDashDate, startOfDay, Obj */
 
 (function() {
 	'use strict';
@@ -107,19 +107,13 @@
 		// Don't submit the form:
 		event.preventDefault();
 
-		var edits = transactionBeingEdited.edits || [];
-		delete transactionBeingEdited.edits;
-		edits.push(transactionBeingEdited);
-		edits = JSON.parse(JSON.stringify(edits));
-
 		// Grab the transaction from the form:
-		var newData = DDS.prepObj({
+		var newData = {
 			title: this.title.value,
 			wallet: this.wallet.selectedIndex,
 			amount: +this.amount.value,
-			date: parseDashDate(this.date.value).getTime(),
-			edits: edits
-		});
+			date: parseDashDate(this.date.value).getTime()
+		};
 
 		// Remove money from old wallet and place in new:
 		updateTotal(transactionBeingEdited.wallet, -transactionBeingEdited.amount);

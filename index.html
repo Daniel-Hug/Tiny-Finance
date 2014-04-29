@@ -74,7 +74,7 @@
 			</form>
 			<table class="wallet-table">
 				<tbody>
-					<tr data-tmp="wallet">
+					<tr data-tmp="wallet" id="wallet_{{_id}}">
 						<td><button class="icon-pencil"><span class="ir">edit</span></button></td>
 						<td>
 							<form>
@@ -129,7 +129,7 @@
 					</tr>
 				</tfoot>
 				<tbody class="transactions">
-					<tr data-tmp="transaction" id="transaction_{{id}}">
+					<tr data-tmp="transaction" id="transaction_{{_id}}">
 						<td>{{title}}</td>
 						<td>{{amount}}</td>
 						<td title="{{date}}">{{relativeDate}}</td>
