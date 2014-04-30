@@ -32,16 +32,46 @@
 	)  Money Total  (
 	\*=============*/
 
+	window.transactions.subscribe(function(newObj, oldObj) {
+		if (oldObj) {
+			// edit / remove
+			if (newObj._isDeleted) {
+				if (oldObj._isDeleted) return;
+				// deleted.
+				updateTotal(oldObj.wallet, -oldObj.amount);
+			} else if (oldObj._isDeleted) {
+				// un-deleted.
+				updateTotal(newObj.wallet, newObj.amount);
+			} else {
+				// edited.
+				if (newObj.wallet === oldObj.wallet) {
+					// wallet didn't change.
+					updateTotal(newObj.wallet, newObj.amount - oldObj.amount);
+				} else {
+					// wallet changed.
+					updateTotal(newObj.wallet, newObj.amount);
+					updateTotal(oldObj.wallet, -oldObj.amount);
+				}
+			}
+		} else {
+			// push
+			if (newObj._isDeleted) return;
+			updateTotal(newObj.wallet, newObj.amount);
+		}
+		updateGraph();
+	});
+
 	// Update wallet balance and money total:
-	window.updateTotal = function(walletIndex, addend) {
+	function updateTotal(walletID, addend) {
 		// Update wallet balance:
-		var wallet = window.wallets[walletIndex],
+		if (addend === 0) return;
+		var wallet = window.wallets.find({_id: walletID}),
 		walletBalance = wallet.balance || 0;
 		window.wallets.edit(wallet, { balance: stripNum(walletBalance + addend) });
 
 		// Update full total:
 		updateFullTotal(stripNum(moneyTotal + addend));
-	};
+	}
 
 	var totalEls = qsa('.total');
 	var moneyTotal = 0;
@@ -77,7 +107,7 @@
 	var changeTransactionFilter = debounce(function() {
 		var checkedWallets = [];
 		each(qsa('input[type=checkbox]', walletFiltersParent), function(checkbox, walletIndex) {
-			if (checkbox.checked) checkedWallets.push(walletIndex);
+			if (checkbox.checked) checkedWallets.push(walletIndex); // FIX: use UID instead of wallet index
 		});
 		dataStageTransactions.setFilter(function(transaction) {
 			return checkedWallets.indexOf(transaction.wallet) >= 0;

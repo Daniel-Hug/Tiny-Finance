@@ -5,7 +5,7 @@
 
 	// Add wallets to select element in transaction form:
 	function renderWalletOption(data) {
-		return new Option(data.name);
+		return new Option(data.name, data._id);
 	}
 	each(qsa('.wallet-select'), function (selectEl) {
 		wallets.attach(new Parasite({

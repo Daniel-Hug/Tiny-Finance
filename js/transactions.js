@@ -1,4 +1,4 @@
-/* global ensureType, Parasite, dataStage, transactions, wallets, tmp, qs, on, updateTotal, formatMoney, formatDate, updateGraph, daysAgo, toDashDate, parseDashDate, startOfDay, Obj */
+/* global ensureType, Parasite, dataStage, transactions, wallets, tmp, qs, on, formatMoney, formatDate, daysAgo, toDashDate, parseDashDate, startOfDay, Obj */
 
 (function() {
 	'use strict';
@@ -7,6 +7,9 @@
 	var transactionsTbody = qs('.transactions');
 	function renderTransaction(transaction) {
 		ensureType(transaction, 'obj');
+
+		var wallet = wallets.find({_id: transaction.wallet});
+
 		var tr = tmp.transaction({
 			title: transaction.title,
 			id: transaction.id,
@@ -14,10 +17,10 @@
 			amount: formatMoney(transaction.amount),
 			relativeDate: daysAgo(transaction.date),
 			date: formatDate(transaction.date),
-			wallet: wallets[transaction.wallet].name
+			wallet: wallet.name
 		});
 
-		Obj.subscribe(wallets[transaction.wallet], function(wallet) {
+		Obj.subscribe(wallet, function(wallet) {
 			qs('.wallet', tr).textContent = wallet.name;
 		});
 
@@ -30,8 +33,6 @@
 		on(qs('.actions .delete', tr), 'click', function() {
 			if (confirm('Delete?\n' + transaction.title)) {
 				transactions.remove(transaction);
-				updateTotal(transaction.wallet, -transaction.amount);
-				updateGraph();
 			}
 		});
 
@@ -54,17 +55,13 @@
 		var dashDate = this.date.value;
 		var transaction = {
 			title: this.title.value,
-			wallet: this.wallet.selectedIndex,
+			wallet: this.wallet.value,
 			amount: +this.amount.value,
-			date: dashDate ? parseDashDate(dashDate).getTime() : startOfDay(),
-			edits: []
+			date: dashDate ? parseDashDate(dashDate).getTime() : startOfDay()
 		};
 
 		// Add the new transaction to the transactions 'array':
 		transactions.push(transaction);
-		updateTotal(transaction.wallet, transaction.amount);
-
-		updateGraph();
 	});
 
 
@@ -88,7 +85,7 @@
 
 		// Stick the transaction data in the edit form:
 		transactionEditForm.title.value = transactionBeingEdited.title;
-		transactionEditForm.wallet.value = wallets[transactionBeingEdited.wallet].name;
+		transactionEditForm.wallet.value = transactionBeingEdited.wallet;
 		transactionEditForm.amount.value = transactionBeingEdited.amount;
 		transactionEditForm.date.value = toDashDate(transactionBeingEdited.date);
 
@@ -110,19 +107,14 @@
 		// Grab the transaction from the form:
 		var newData = {
 			title: this.title.value,
-			wallet: this.wallet.selectedIndex,
+			wallet: this.wallet.value,
 			amount: +this.amount.value,
 			date: parseDashDate(this.date.value).getTime()
 		};
 
-		// Remove money from old wallet and place in new:
-		updateTotal(transactionBeingEdited.wallet, -transactionBeingEdited.amount);
-		updateTotal(newData.wallet, newData.amount);
-
 		// Replace old transaction object with new:
 		transactions.edit(transactionBeingEdited, newData);
 
-		updateGraph();
 		stopEdit();
 	}
 	on(transactionEditForm, 'submit', handleTransactionEdit);
