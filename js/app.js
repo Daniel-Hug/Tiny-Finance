@@ -103,14 +103,15 @@
 
 	// An array of the checked wallets (all are checked to start):
 	var walletFiltersParent = qs('.filter-list');
+	var walletFilterCheckboxes = walletFiltersParent.getElementsByTagName('input');
 
 	var changeTransactionFilter = debounce(function() {
-		var checkedWallets = [];
-		each(qsa('input[type=checkbox]', walletFiltersParent), function(checkbox, walletIndex) {
-			if (checkbox.checked) checkedWallets.push(walletIndex); // FIX: use UID instead of wallet index
+		var filteredWalletMap = {};
+		each(walletFilterCheckboxes, function(checkbox) {
+			filteredWalletMap[checkbox.value] = checkbox.checked;
 		});
 		dataStageTransactions.setFilter(function(transaction) {
-			return checkedWallets.indexOf(transaction.wallet) >= 0;
+			return filteredWalletMap[transaction.wallet];
 		});
 		updateGraph(dataStageTransactions.filteredArr);
 		updateFilteredTotal(calculateTotalFromTransactions(dataStageTransactions.filteredArr));
@@ -123,6 +124,7 @@
 		var checkbox = document.createElement('input');
 
 		checkbox.setAttribute('type', 'checkbox');
+		checkbox.value = wallet._id;
 		checkbox.checked = true;
 		label.textContent = ' ' + wallet.name;
 		prependAInB(checkbox, label);

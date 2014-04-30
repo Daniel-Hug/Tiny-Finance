@@ -10,8 +10,7 @@
 	each(qsa('.wallet-select'), function (selectEl) {
 		wallets.attach(new Parasite({
 			renderer: renderWalletOption,
-			parent: selectEl,
-			keepOrder: true /*<= important for wallet selection by option index */
+			parent: selectEl
 		}));
 	});
 
