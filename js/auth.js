@@ -1,4 +1,4 @@
-/*global Obj, on, qs, Firebase, FirebaseSimpleLogin */
+/* global $, TF, Firebase, FirebaseSimpleLogin */
 
 //
 // User authentication with Firebase
@@ -12,20 +12,18 @@
 (function() {
 	'use strict';
 
-	var userDrop = qs('.user-drop .tab');
+	var userDrop = $.qs('.user-drop .tab');
 	var fbUsers = new Firebase('https://tiny-finance.firebaseio.com/users');
 
 	function mergeLocalAndFBModels(modelNames) {
 		// Merge localStorage and Firebase models and update both:
 		modelNames.forEach(function(modelName) {
 			var fbCollectionRef = window.fbUser.child(modelName);
-			var dds = window[modelName];
+			var dds = TF[modelName];
 
 			fbCollectionRef.on('child_added', function(snapshot) {
-				var _id = snapshot.name();
 				var fbObj = snapshot.val();
-				fbObj._id = _id;
-				var localObj = dds.find({_id: _id});
+				var localObj = dds[fbObj._id];
 
 				if (localObj) {
 					if (fbObj._lastEdit) {
@@ -34,35 +32,23 @@
 						}
 					}
 				}
-				else dds.push(fbObj);
+				else dds.add(fbObj);
 			});
 
 			fbCollectionRef.on('child_changed', function(snapshot) {
-				var _id = snapshot.name();
 				var fbObj = snapshot.val();
-				fbObj._id = _id;
-				var localObj = dds.find({_id: _id});
+				var localObj = dds.objects[fbObj._id];
 
 				dds.edit(localObj, fbObj);
 			});
 
 			// Update Firebase with new merged data:
 			fbCollectionRef.once('value', function() {
-				var newCollection = {};
-				dds.serialize().forEach(function(obj) {
-					obj = Obj.extend(obj);
-					var _id = obj._id;
-					delete obj._id;
-					newCollection[_id] = obj;
-				});
-				fbCollectionRef.update(newCollection);
+				fbCollectionRef.update(dds.objects);
 			});
 
-			dds.subscribe(function(newObj) {
-				var clone = Obj.extend(newObj);
-				var _id = clone._id;
-				delete clone._id;
-				fbCollectionRef.child(_id).set(clone);
+			dds.on('change', function(newObj) {
+				dds.child(newObj._id).set(newObj);
 			});
 		});
 	}
@@ -94,12 +80,12 @@
 
 
 	// "Sign In with Google" button
-	on(qs('.googLoginBtn'), 'click', function () {
+	$.on($.qs('.googLoginBtn'), 'click', function () {
 		tinyFinanceAuth.login('google');
 	});
 
 	// Logout button
-	on(qs('.logoutBtn'), 'click', function () {
+	$.on($.qs('.logoutBtn'), 'click', function () {
 		tinyFinanceAuth.logout();
 	});
 

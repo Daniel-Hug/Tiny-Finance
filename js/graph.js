@@ -1,89 +1,87 @@
-// Load visualization lib:
-google.load('visualization', '1', {
-	packages: ['corechart']
-});
+/* global $, TF, google */
+(function() {
+	'use strict';
 
-var graphEl = qs('.graph'),
-	graphWrapper = qs('.data-stage'),
-	graphData, drawGraph;
-
-// Set up graph:
-google.setOnLoadCallback(graphInit);
-
-
-// Returns an array of 30 arrays.
-// The 30 arrays represent the last 30 days.
-// The first item in each is that day's timestamp.
-// The second item in each is the dollar subtotal for that day.
-function subtotalsByDay(transactions) {
-	var defaultDay = [startOfDay(), 0];
-	var days = [transactions.length ? [
-		transactions[0].date,
-		transactions[0].amount
-	] : defaultDay],
-	lastDay = days[0];
-
-	function fillGaps(endDate) {
-		var dayDiff = getDayDiff(lastDay[0], endDate);
-		while (dayDiff-- > 0) {
-			days.push([
-				addDay(lastDay[0]),
-				lastDay[1]
-			]);
-			lastDay = days[days.length - 1];
-		}
-	}
-
-	// Fill gaps between transactions and calculate subtotals for days with transactions:
-	for (var i = 1; i < transactions.length; i++) {
-		fillGaps(transactions[i].date);
-		lastDay[1] = stripNum(lastDay[1] + transactions[i].amount);
-	}
-
-	// Fill gaps between last transaction and today:
-	fillGaps(startOfDay());
-
-	// Add enough 0 balance days before first transaction to make sure we have 30 days:
-	if (days.length < 30) {
-		var numToPrepend = 30 - days.length;
-		while (numToPrepend-- > 0) {
-			days.unshift([
-				subtractDay(days[0][0]),
-				0
-			]);
-		}
-	}
-
-	return days.slice(-30);
-}
-
-
-function formatDaysForTable(transactions) {
-	var days = subtotalsByDay(transactions).map(function(day) {
-		day[0] = new Date(day[0]);
-		return day;
+	// Load visualization lib:
+	google.load('visualization', '1', {
+		packages: ['corechart']
 	});
 
-	// Create and populate the data table.
-	var data = google.visualization.arrayToDataTable([['Time', 'Net Worth']].concat(days));
-
-	// Format date and dollar:
-	var dateFormatter   = new google.visualization.DateFormat({ pattern: 'MMM d, y' });
-	var dollarFormatter = new google.visualization.NumberFormat({ prefix: '$' });
-	dateFormatter.format(data, 0);
-	dollarFormatter.format(data, 1);
-
-	return data;
-}
+	var graphEl = $.qs('.graph');
+	var graphWrapper = $.qs('.data-stage');
+	var graphData, googLn;
 
 
-function graphInit() {
-	googLn = new google.visualization.LineChart(graphEl);
+	// Returns an array of 30 arrays.
+	// The 30 arrays represent the last 30 days.
+	// The first item in each is that day's timestamp.
+	// The second item in each is the dollar subtotal for that day.
+	function subtotalsByDay(transactions) {
+		var defaultDay = [$.startOfDay(), 0];
+		var days = [
+			transactions.length ? [
+				transactions[0].date,
+				transactions[0].amount
+			] : defaultDay
+		];
+		var lastDay = days[0];
 
-	drawGraph = function drawGraph() {
+		function fillGaps(endDate) {
+			var dayDiff = $.getDayDiff(lastDay[0], endDate);
+			while (dayDiff-- > 0) {
+				days.push([
+					$.addDay(lastDay[0]),
+					lastDay[1]
+				]);
+				lastDay = days[days.length - 1];
+			}
+		}
+
+		// Fill gaps between transactions and calculate subtotals for days with transactions:
+		for (var i = 1; i < transactions.length; i++) {
+			fillGaps(transactions[i].date);
+			lastDay[1] = $.stripNum(lastDay[1] + transactions[i].amount);
+		}
+
+		// Fill gaps between last transaction and today:
+		fillGaps($.startOfDay());
+
+		// Add enough 0 balance days before first transaction to make sure we have 30 days:
+		if (days.length < 30) {
+			var numToPrepend = 30 - days.length;
+			while (numToPrepend-- > 0) {
+				days.unshift([
+					$.subtractDay(days[0][0]),
+					0
+				]);
+			}
+		}
+
+		return days.slice(-30);
+	}
+
+
+	function formatDaysForTable(transactions) {
+		var days = subtotalsByDay(transactions).map(function(day) {
+			day[0] = new Date(day[0]);
+			return day;
+		});
+
+		// Create and populate the data table.
+		var data = google.visualization.arrayToDataTable([['Time', 'Net Worth']].concat(days));
+
+		// Format date and dollar:
+		var dateFormatter   = new google.visualization.DateFormat({ pattern: 'MMM d, y' });
+		var dollarFormatter = new google.visualization.NumberFormat({ prefix: '$' });
+		dateFormatter.format(data, 0);
+		dollarFormatter.format(data, 1);
+
+		return data;
+	}
+	TF.formatDaysForTable = formatDaysForTable;
+
+	var drawGraph = $.debounce(function () {
 		var dateRange = graphData.getColumnRange(0);
-		var dollarRange = graphData.getColumnRange(1);
-		var vPadding = Math.ceil((dollarRange.max - dollarRange.min) * 0.02)
 		var width = graphWrapper.offsetWidth - 34;
 		googLn.draw(graphData, {
 			//curveType: "function",
@@ -91,18 +89,12 @@ function graphInit() {
 			width:  width,
 			height: 0.8 * width,
 			hAxis: {
-				format: 'MMM d'
+				format: 'MMM d',
 				// 1 day before first:
-				,minValue: new Date(subtractDay(dateRange.min))
+				minValue: new Date($.subtractDay(dateRange.min)),
 				// 1 day after last:
-				,maxValue: new Date(addDay(dateRange.max))
-				//,textPosition: 'in'
+				maxValue: new Date($.addDay(dateRange.max))
 			},
-			/*vAxis: {
-				maxValue: dollarRange.max + vPadding
-				,minValue: dollarRange.min - vPadding
-				//,textPosition: 'in'
-			},*/
 			legend: 'none',
 			chartArea: {
 				top: '8%',
@@ -112,14 +104,20 @@ function graphInit() {
 			},
 			pointSize: Math.ceil(width / 100)
 		});
+	}, 5);
+
+
+	TF.updateGraph = function() {
+		graphData = formatDaysForTable(TF.dataStageTransactions.getArray());
+		drawGraph();
 	};
 
-	updateGraph();
-	on(window, 'resize', debounce(drawGraph, 5));
-}
+	google.setOnLoadCallback(function() {
+		googLn = new google.visualization.LineChart(graphEl);
 
+		TF.updateGraph();
+		$.on(window, 'resize', drawGraph);
+	});
 
-function updateGraph(filteredTransactions) {
-	graphData = formatDaysForTable(filteredTransactions || transactions);
-	drawGraph();
-}
+	TF.dataStageTransactions.on('any', TF.updateGraph);
+})();
