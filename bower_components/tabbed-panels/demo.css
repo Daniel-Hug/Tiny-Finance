@@ -1,0 +1,53 @@
+h1,
+h2,
+h3 {
+	font-weight: normal;
+}
+
+
+/* tabs & panels */
+.markup-demo .tab,
+.markup-demo .panel {
+	margin-left: 2em;
+}
+
+.markup-demo .tabbed-panels:before,
+.markup-demo .tabbed-panels:after {
+	display: block;
+}
+
+.markup-demo .tabbed-panels:before,
+.markup-demo .tabbed-panels .panel:before {
+	content: '<div class="' attr(class) '">';
+}
+
+.markup-demo .tabbed-panels:after,
+.markup-demo .tabbed-panels .panel:after {
+	content: '</div>';
+}
+
+
+/* tabs */
+.markup-demo .tabbed-panels .tab {
+	display: block;
+	margin-top: .5em;
+	margin-bottom: .5em;
+	background: #ddd !important;
+	border-radius: 4px !important;
+}
+
+.markup-demo .tabbed-panels .tab:before {
+	content: '<button class="' attr(class) '">';
+}
+
+.markup-demo .tabbed-panels .tab:after {
+	content: '</button>';
+}
+
+
+/* panels */
+.markup-demo .tabbed-panels .panel {
+	display: block;
+	border: initial;
+	padding: initial;
+}

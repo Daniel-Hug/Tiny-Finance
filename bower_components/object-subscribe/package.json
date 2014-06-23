@@ -1,0 +1,27 @@
+{
+	"author": "Daniel Hug",
+	"name": "object-subscribe",
+	"version": "2.2.2",
+	"description": "Unobtrusive object subscribe / watch / bind",
+	"keywords": [
+		"subscribe",
+		"watch",
+		"bind",
+		"object",
+		"listen",
+		"callback",
+		"extend",
+		"copy",
+		"toType",
+		"hasOwnProperty"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Daniel-Hug/object-subscribe"
+	},
+	"license": "Unlicense",
+	"main": "obj.js",
+	"engines": {
+		"node": "*"
+	}
+}

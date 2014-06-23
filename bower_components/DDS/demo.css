@@ -1,0 +1,202 @@
+/*
+	Reset
+*/
+
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/* Correct overflow displayed oddly in IE 9 */
+svg:not(:root) {
+	overflow: hidden;
+}
+
+button,
+input[type=submit],
+input[type=button],
+input[type=reset],
+input[type=checkbox],
+input[type=radio] {
+	cursor: pointer;
+}
+
+input[type=text], button {
+	border: 1px solid;
+	margin: 0;
+	font: inherit;
+
+	-webkit-transition: box-shadow 0.2s ease-out;
+	-moz-transition: box-shadow 0.2s ease-out;
+	-o-transition: box-shadow 0.2s ease-out;
+	transition: box-shadow 0.2s ease-out;
+}
+
+button {
+	background: white;
+}
+
+
+
+/*
+	helper classes
+*/
+
+.visuallyhidden {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+button:active,
+input[type=text]:focus {
+	box-shadow:
+		inset  0   2px 0 rgba(0, 0, 0, 0.02),
+		inset  1px 2px 0 rgba(0, 0, 0, 0.08),
+		inset -1px 2px 0 rgba(0, 0, 0, 0.08),
+		inset  0   3px 0 rgba(0, 0, 0, 0.06);
+}
+
+button:hover,
+button:focus,
+input[type=text]:hover,
+input[type=text]:focus,
+input[type=checkbox]:hover,
+input[type=checkbox]:focus {
+	border-color: hsl(192, 100%, 43%);
+	outline: 0;
+}
+
+button.active {
+	background: black;
+	color: white;
+}
+
+button.active:hover,
+button.active:focus {
+	background: hsl(192, 100%, 43%);
+}
+
+button .icon {
+	font-size: 2.2em;
+	line-height: .98em;
+	margin-right: .2em;
+	vertical-align: middle;
+}
+
+button .icon-text {
+	vertical-align: middle;
+}
+
+body {
+	margin: 0;
+	font: 16px sans-serif;
+}
+
+
+
+/*
+	Add task form
+*/
+
+.toolbar {
+	overflow: hidden;
+}
+
+.new-task-form {
+	margin: 0;
+	overflow: hidden;
+	position: relative;
+}
+
+.new-task-form input {
+	outline: 0;
+	font: inherit;
+}
+
+.new-task-form input {
+	float: left;
+	width: 100%;
+	padding: .6em;
+	padding-right: 84px;
+}
+
+.new-task-form button {
+	position: absolute;
+	right: 0;
+	height: 100%;
+	padding: 0 .7em;
+}
+
+
+
+/*
+	Task list
+*/
+
+.task-list {
+	list-style: none;
+	padding: 0;
+}
+
+.task-list li {
+	padding: 6px 0;
+}
+
+.task-list .title {
+	width: 100%;
+	padding-left: 76px;
+	padding-right: 1px;
+	line-height: 28px;
+	vertical-align: middle;
+	cursor: text;
+}
+
+.task-list .title > div {
+	padding: 0 2px;
+	word-wrap: break-word;
+}
+
+.task-list input[type=checkbox] + .checkbox, .task-list .icon-trash {
+	float: left;
+	border: 2px solid;
+	width: 28px;
+	height: 28px;
+	margin: 0;
+	padding: 0;
+	margin-right: 10px;
+	vertical-align: middle;
+}
+
+.task-list input[type=checkbox] + .checkbox:before {
+	display: none;
+	content: "\2713";
+	font-size: 1.3em;
+	line-height: 24px;
+	text-align: center;
+}
+
+.task-list input[type=checkbox]:checked + .checkbox:before {
+	display: block;
+}
+
+
+.left, .right {
+	width: 50%;
+	padding: 2em;
+	float: left;
+}
+
+.left {
+	padding-right: 1em;
+}
+
+.right {
+	padding-left: 1em;
+}
