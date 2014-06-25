@@ -47,7 +47,7 @@
 				fbCollectionRef.update(dds.objects);
 			});
 
-			dds.on('change', function(newObj) {
+			dds.on('any', function(newObj) {
 				dds.child(newObj._id).set(newObj);
 			});
 		});
