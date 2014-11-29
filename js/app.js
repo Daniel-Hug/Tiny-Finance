@@ -3,8 +3,9 @@
 (function() {
 	'use strict';
 
-	// Setup and cache app global:
+	// Setup app global:
 	var TF = window.TF = {};
+	TF.renderers = {};
 
 
 
@@ -37,7 +38,28 @@
 
 
 
-	// Default value for all input[type=date]:
+	/*===============================================*\
+	)  Add list of wallets to wallet select elements  (
+	\*===============================================*/
+
+	function renderWalletOption(data) {
+		return new Option(data.name, data._id);
+	}
+
+	$.each($.qsa('.wallet-select'), function (selectEl) {
+		TF.wallets.render(new DDS.DOMView({
+			renderer: renderWalletOption,
+			parent: selectEl,
+			requiredKeys: ['name']
+		}));
+	});
+
+
+
+	/*========================================*\
+	)  Default value for all input[type=date]  (
+	\*========================================*/
+
 	$.each($.qsa('input[type=date]'), function(dateInput) {
 		if (!dateInput.value) dateInput.value = $.toDashDate(Date.now());
 	});

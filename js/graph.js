@@ -108,7 +108,8 @@
 
 
 	TF.updateGraph = function() {
-		graphData = formatDaysForTable(TF.dataStageTransactions.objects);
+		var transactions = TF.dataStageTransactions.objects.reverse(); // ordered in ascending order by ts (recent last)
+		graphData = formatDaysForTable(transactions);
 		drawGraph();
 	};
 
