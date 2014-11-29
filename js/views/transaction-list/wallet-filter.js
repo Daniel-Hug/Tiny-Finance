@@ -3,6 +3,22 @@
 (function() {
 	'use strict';
 
+	TF.filteredWalletMap = TF.filteredWalletMap || {};
+
+	// Keep TF.filteredWalletMap updated when checkboxes are checked/unchecked
+	TF.walletFilterChange = function() {
+		/*jshint validthis: true */
+		TF.filteredWalletMap[this.value] = this.checked;
+		TF.filterTransactions();
+	}
+
+
+	TF.filterTransactions = $.debounce(function() {
+		TF.dataStageTransactions.filter(function(transaction) {
+			return TF.filteredWalletMap[transaction.wallet];
+		});
+	}, 10);
+
 	function renderWalletFilter(wallet) {
 		// Create the checkbox list item:
 		var li = document.createElement('li');

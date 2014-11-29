@@ -48,7 +48,6 @@
 		TF.wallets.edit(wallet, { balance: $.stripNum(wallet.balance + addend) });
 	}
 
-
 	// update wallet(s) when a transaction is edited, added, deleted, or un-deleted:
 	TF.transactions.on('edit', function(event, newObj, oldObj) {
 		// edited.
@@ -76,20 +75,6 @@
 	)  Transaction filtering by wallet  (
 	\*=================================*/
 
-	TF.filteredWalletMap = TF.filteredWalletMap || {};
-	var filterTransactions = $.debounce(function() {
-		TF.dataStageTransactions.filter(function(transaction) {
-			return TF.filteredWalletMap[transaction.wallet];
-		});
-	}, 10);
-
-	// Keep TF.filteredWalletMap updated when checkboxes are checked/unchecked
-	TF.walletFilterChange = function() {
-		/*jshint validthis: true */
-		TF.filteredWalletMap[this.value] = this.checked;
-		filterTransactions();
-	}
-
 	// "Toggle Selected" button:
 	$.each($.qsa('.toggle-check'), function (toggleBtn) {
 		$.on(toggleBtn, 'click', function() {
@@ -101,6 +86,7 @@
 		});
 	});
 
+	// when transactions filter changes, recalculate total:
 	var filteredTotalEl = $.qs('.transactions-table .total');
 	TF.dataStageTransactions.on('filter', function() {
 		var filteredTotal = 0;

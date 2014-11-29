@@ -10,7 +10,7 @@
 	\*=========================*/
 
 	var walletTbody = $.qs('.wallet-table tbody');
-	var walletListRenderer = TF.wallets.render(new DDS.DOMView({
+	var walletListView = TF.wallets.render(new DDS.DOMView({
 		renderer: TF.renderers.wallet,
 		parent: walletTbody
 	}));
