@@ -1,26 +1,20 @@
+/*global define */
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['object-subscribe', 'subscribable.js'], factory);
-    } else {
-        // Browser globals
-        root.DDS = factory(root.Obj, root.Subscribable);
-    }
+	'use strict';
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Register as an anonymous module.
+		define(['object-subscribe', 'subscribable.js'], factory);
+	} else {
+		// Browser globals
+		root.DDS = factory(root.Obj, root.Subscribable);
+	}
 })(this, function(Obj, Subscribable) {
 	'use strict';
 
-	function pad(n, width, z) {
-		z = z || '0';
-		n = n + '';
-		return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-	}
-
 	function uid() {
-		return (+(Math.random() + '00').slice(2)).toString(36);
-	}
-
-	function chronUID() {
-		return pad(Date.now().toString(36), 9) + '_' + uid();
+		return (
+			(+(Math.random() + '00').slice(2)).toString(36) + '_' +
+			(+(Math.random() + '00').slice(2)).toString(36));
 	}
 
 	function appendAtIndex(parent, newChild, index) {
@@ -28,86 +22,113 @@
 		parent.insertBefore(newChild, nextSibling);
 	}
 
-	// Bind an array of Data objects to the DOM:
+	// Bind an array of objects to the DOM:
+	// var model = new DDS(arrayOfObjects);
 	var DDS = function(objects) {
-		Obj.extend(new Subscribable(), this);
-		this.objects = {};
+		this.subscribers = {};
+		this.objects = [];
+		this.objectsObj = {};
 
-		var array = objects || [];
 		if (Obj.type(objects) === 'object') {
-			array = this.select.call({objects: objects}, {});
+			for (var _id in objects) {
+				this.add(objects[_id], _id);
+			}
 		}
-		array.forEach(this.add, this);
+		else (objects || []).forEach(this.add, this);
 	};
 
 	DDS.prototype = new Subscribable();
 	Obj.extend({
 		whenever: function(event, fn) {
 			if (event === 'add' || event === 'any') {
-				for (var _id in this.objects) fn(event, this.objects[_id]);
+				for (var i = 0, l = this.objects.length; i < l; i++) fn(event, this.objects[i]);
 			}
 			this.on(event, fn);
 		},
 
-		add: function(obj) {
-			obj._id = obj._id || chronUID();
-			if (this.objects[obj._id]) return;
-			if (obj._ts === undefined) obj._ts = Date.now();
-			this.objects[obj._id] = obj;
+		add: function(obj, _id) {
+			// prep passed object with an _id prop (each object gets a unique ID)
+			if (obj._id === undefined) {
+				obj._id = _id || uid();
+			}
 
-			// Notify subscribers:
+			// ensure the passed object doesn't have a duplicate
+			if (this.objectsObj[obj._id]) return;
+
+			// prep passed object with an _ts prop (date created)
+			if (obj._ts === undefined) obj._ts = Date.now();
+
+			// add object to this.objects and this.objectsObj
+			this.objects.push(obj);
+			this.objectsObj[obj._id] = obj;
+
+			// notify subscribers/views
 			if (!obj._isDeleted) {
 				this.trigger('add', obj);
 			}
 		},
 
-		edit: function(obj, changes, DDSRendererNotToUpdate) {
+		edit: function(obj, changes, DDSViewNotToUpdate) {
 			var oldObj = Obj.extend(obj);
 			obj._lastEdit = Date.now();
 			Obj.set(obj, changes);
 
 			// Notify subscribers:
 			var operation = obj._isDeleted ? 'remove' : (oldObj._isDeleted ? 'add' : 'edit');
-			this.trigger(operation, obj, oldObj, DDSRendererNotToUpdate);
+			this.trigger(operation, obj, oldObj, DDSViewNotToUpdate);
 		},
 
 		remove: function(obj) {
 			this.edit(obj, {_isDeleted: true});
 		},
 
-		select: function(queryObj) {
+		findAll: function(queryObj) {
 			var array = [];
-			loop:
-			for (var _id in this.objects) {
-				var dataObj = this.objects[_id];
+			this.objects.forEach(function(dataObj) {
 				for (var key in queryObj) {
-					if (queryObj[key] !== dataObj[key]) continue loop;
+					if (queryObj[key] !== dataObj[key]) return;
 				}
 				array.push(dataObj);
-			}
+			});
 			return array;
 		},
 
-		// Keep DOM updated with latest data, return renderer
-		render: function(Renderer) {
-			Renderer.dds = this;
-			Renderer.refresh();
+		find: function(queryObj) {
+			var numObjects = this.objects.length;
+			search:
+			for (var i = 0; i < numObjects; i++) {
+				var dataObj = this.objects[i];
+				for (var key in queryObj) {
+					if (queryObj[key] !== dataObj[key]) continue search;
+				}
+				return dataObj;
+			}
+		},
+
+		// Keep DOM updated with latest data, return passed view
+		render: function(view) {
+			view.dds = this;
+			view.objects = view.getModel();
+			view.refresh();
 
 			// keep view updated:
-			this.on('add edit remove', Renderer.render.bind(Renderer));
+			this.on('add edit remove', view.render.bind(view));
 
-			return Renderer;
+			return view;
 		}
 	}, DDS.prototype);
 
 
 
 
-
-
-	DDS.Renderer = function(options) {
+	DDS.View = function(options) {
 		options = options || {};
-		Obj.extend(new Subscribable(), this);
+		this.subscribers = {};
+
+		// these are set when the `render` method of a DDS instance is called passing this view:
+		this.dds = null;
+		this.objects = null; // always up to date view model
+
 		this.requiredKeys = options.requiredKeys;
 		this.sorter = options.sort || function(array) {
 			return array.reverse();
@@ -117,76 +138,99 @@
 		};
 	};
 
-	// These are the base methods of DDS.Renderer instances.
-	// Usable DDS Renderers should extend the base DDS.Renderer with the following methods:
-	// add(obj, index), remove(obj._id), refresh(), sort(fn)
-	DDS.Renderer.prototype = new Subscribable();
+	// Usable DDS Views (e.g., see DDS.DOMView below)
+	// should extend DDS.View and add, at minimum, a `refresh` method.
+	// For increased performance, include the following methods as well:
+	// add(obj, index), remove(obj._id), and sort(fn)
+	DDS.View.prototype = new Subscribable();
 	Obj.extend({
-		render: function(action, newObj, oldObj, DDSRendererNotToUpdate) {
-			if (this === DDSRendererNotToUpdate) return;
+		getModel: function() {
+			var nonDeleted = this.dds.findAll({_isDeleted: undefined});
+			return this.sorter(nonDeleted.filter(this.filterer));
+		},
+
+		render: function(action, newObj, oldObj, DDSViewNotToUpdate) {
+			this.objects = this.getModel();
+			if (this === DDSViewNotToUpdate) return;
 			var isEdit = action === 'edit';
 
 			// On edit, only update view if a required key changed
-			// while loop (labeled "w") only runs once
-			w:
-			while (isEdit && this.requiredKeys && this.requiredKeys.length) {
+			objDiff:
+			if (isEdit && this.requiredKeys && this.requiredKeys.length) {
 				for (var i = 0, l = this.requiredKeys.length; i < l; i++) {
 					var key = this.requiredKeys[i];
-					if (newObj[key] !== oldObj[key]) break w;
+					if (newObj[key] !== oldObj[key]) break objDiff;
 				}
 				return;
 			}
 
+			// determine wether view will need to perform an 'add' and/or a 'remove' operation
 			if (isEdit || action === 'remove') {
-				this.remove(newObj._id);
+				var shouldRemove = true;
 			}
-			if (isEdit || action === 'add') {
-				if (!this.filterer(newObj)) return;
-				this.add(newObj, this.getArray().indexOf(newObj));
+			if ((isEdit || action === 'add') && this.filterer(newObj)) {
+				var shouldAdd = true;
 			}
-			this.trigger(action);
-		},
 
-		getArray: function() {
-			var nonDeletedArr = this.dds.select({_isDeleted: undefined});
-			return this.sorter(nonDeletedArr.filter(this.filterer));
+			// perform any needed add or remove operations on view
+			// use view.refresh if view doesn't have a needed remove/add method
+			if (shouldRemove && !this.remove || shouldAdd && !this.add) {
+				this.refresh()
+			} else {
+				if (shouldRemove) {
+					this.remove(newObj._id);
+				}
+				if (shouldAdd) {
+					this.add(newObj, this.objects.indexOf(newObj));
+				}
+			}
+
+			this.trigger(action);
 		},
 
 		filter: function(fn) {
 			this.filterer = fn;
 
-			// refresh view:
-			var nonDeletedArr = this.dds.select({_isDeleted: undefined});
-			var displayArray = this.sorter(nonDeletedArr.filter(this.filterer));
+			if (this.add && this.remove) {
+				// grab new view model:
+				var newViewModel = this.getModel();
 
-			nonDeletedArr.forEach(function(object) {
-				var elIndex = displayArray.indexOf(object);
-				if (elIndex >= 0) {
-					this.add(object, elIndex);
-				} else {
-					this.remove(object._id);
-				}
-			}, this);
+				// remove old objects from view if they're not in new model
+				this.objects.forEach(function(object) {
+					if (newViewModel.indexOf(object) < 0) {
+						this.remove(object._id);
+					}
+				}, this);
+
+				// update model
+				this.objects = newViewModel;
+
+				// add new objects in model to view
+				this.objects.forEach(function(object, index) {
+					this.add(object, index);
+				}, this);
+			}
+			else this.refresh();
+
 			this.trigger('filter');
 		},
 
 		edit: function(obj, changes) {
 			this.dds.edit(obj, changes, this);
 		}
-	}, DDS.Renderer.prototype);
+	}, DDS.View.prototype);
 
 
 
 
-
-	DDS.DOMRenderer = function(options) {
-		Obj.extend(new DDS.Renderer(options), this);
+	DDS.DOMView = function(options) {
+		Obj.extend(new DDS.View(options), this);
 		this.renderer = options.renderer;
 		this.parent = options.parent;
 		this.elements = {};
 	};
 
-	DDS.DOMRenderer.prototype = new DDS.Renderer();
+	DDS.DOMView.prototype = new DDS.View();
 	Obj.extend({
 		elFromObject: function(object) {
 			return (this.elements[object._id] = this.renderer(object));
@@ -211,8 +255,8 @@
 			Obj.reset(this.elements);
 		},
 
-		renderMultiple: function(array) {
-			var renderedEls = array.map(this.elFromObject, this);
+		renderMultiple: function(array, renderer) {
+			var renderedEls = array.map(renderer || this.elFromObject, this);
 			var docFrag = document.createDocumentFragment();
 			var numEls = renderedEls.length;
 			for (var i = 0; i < numEls; i++) docFrag.appendChild(renderedEls[i]);
@@ -221,19 +265,18 @@
 
 		refresh: function() {
 			this.emptyParent();
-			this.renderMultiple(this.getArray());
+			this.renderMultiple(this.objects);
 		},
 
 		sort: function(fn) {
 			this.sorter = fn;
-
-			// reorder elements, Fix: this may not be the most efficient method:
-			this.getArray().forEach(function(object) {
-				this.parent.appendChild(this.parent.removeChild(this.elements[object._id]));
-			}, this);
+			this.objects = this.sorter(this.objects);
+			this.renderMultiple(this.objects, function(object) {
+				return this.parent.removeChild(this.elements[object._id]);
+			});
 			this.trigger('sort');
 		}
-	}, DDS.DOMRenderer.prototype);
+	}, DDS.DOMView.prototype);
 
 	return DDS;
 });

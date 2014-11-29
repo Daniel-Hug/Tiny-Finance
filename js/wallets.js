@@ -14,7 +14,7 @@
 	}
 
 	$.each($.qsa('.wallet-select'), function (selectEl) {
-		TF.wallets.render(new DDS.DOMRenderer({
+		TF.wallets.render(new DDS.DOMView({
 			renderer: renderWalletOption,
 			parent: selectEl,
 			requiredKeys: ['name']
@@ -60,7 +60,7 @@
 		return walletRow;
 	}
 
-	var walletListRenderer = TF.wallets.render(new DDS.DOMRenderer({
+	var walletListRenderer = TF.wallets.render(new DDS.DOMView({
 		renderer: renderWallet,
 		parent: walletTbody
 	}));
@@ -133,7 +133,7 @@
 		return li;
 	}
 
-	TF.wallets.render(new DDS.DOMRenderer({
+	TF.wallets.render(new DDS.DOMView({
 		renderer: renderWalletFilter,
 		parent: walletFiltersParent,
 		sort: function(array) {
@@ -174,7 +174,7 @@
 	TF.dataStageTransactions.on('filter', function() {
 		var filteredTotal = 0;
 		for (var walletID in TF.filteredWalletMap) {
-			if (TF.filteredWalletMap[walletID]) filteredTotal += TF.wallets.objects[walletID].balance;
+			if (TF.filteredWalletMap[walletID]) filteredTotal += TF.wallets.objectsObj[walletID].balance;
 		}
 		filteredTotalEl.textContent = $.formatMoney(TF.filteredMoneyTotal = filteredTotal);
 	});

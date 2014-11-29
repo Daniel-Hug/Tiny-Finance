@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>ToDo with DDS</title>
+		<link rel="icon" href="favicon.ico">
+		<link rel="stylesheet" href="demo.css">
+		<link rel="stylesheet" href="fonts/fonts.css">
+	</head>
+	<body>
+		<div class="app">
+			<div class="toolbar">
+				<form class="new-task-form">
+					<input type="text" class="task-name-field" placeholder="e.g. Walk the dog">
+					<button><span class="icon">+</span><span class="icon-text">Add</span></button>
+				</form>
+			</div>
+			
+			<ol class="task-list"></ol>
+
+			<p class="filter-btns"><strong>Filter:</strong> <button class="all">all</button>, <button class="checked">checked</button>, <button class="unchecked">unchecked</button></p>
+
+			<p class="sort-btns"><strong>Sort:</strong> <button class="newFirst">New first</button>, <button class="newLast">New last</button></p>
+		</div>
+
+		<script src="../../bower_components/object-subscribe/obj.js"></script>
+		<script src="../../bower_components/subscribable.js/subscribable.js"></script>
+		<script src="../../DDS.js"></script>
+		<script src="https://cdn.firebase.com/js/client/1.0.15/firebase.js"></script>
+		<script src="bower_components/DOM-Builder/DOM-Builder.js"></script>
+		<script src="helpers.js"></script>
+		<script src="demo.js"></script>
+	</body>
+</html>

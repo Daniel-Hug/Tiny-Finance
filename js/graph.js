@@ -108,7 +108,7 @@
 
 
 	TF.updateGraph = function() {
-		graphData = formatDaysForTable(TF.dataStageTransactions.getArray());
+		graphData = formatDaysForTable(TF.dataStageTransactions.objects);
 		drawGraph();
 	};
 

@@ -16,7 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "DDS": "0.0.1",
+    "DDS": "1.x",
     "object-subscribe": "~2.2.2",
     "FatUI": "~1.0.0",
     "tabbed-panels": "~1.0.0"

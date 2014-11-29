@@ -37,14 +37,14 @@
 
 			fbCollectionRef.on('child_changed', function(snapshot) {
 				var fbObj = snapshot.val();
-				var localObj = dds.objects[fbObj._id];
+				var localObj = dds.objectsObj[fbObj._id];
 
 				dds.edit(localObj, fbObj);
 			});
 
 			// Update Firebase with new merged data:
 			fbCollectionRef.once('value', function() {
-				fbCollectionRef.update(dds.objects);
+				fbCollectionRef.update(dds.objectsObj);
 			});
 
 			dds.on('any', function(newObj) {

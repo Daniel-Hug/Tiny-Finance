@@ -1,7 +1,7 @@
 {
   "name": "DDS",
   "main": "DDS.js",
-  "version": "0.0.1",
+  "version": "1.2.2",
   "homepage": "https://github.com/Daniel-Hug/DDS",
   "authors": [
     "Daniel Hug <danielthehug@gmail.com>"
@@ -26,15 +26,15 @@
   ],
   "dependencies": {
     "object-subscribe": "~2.2.2",
-    "subscribable.js": "2.0.0"
+    "subscribable.js": "2.0.1"
   },
-  "_release": "0.0.1",
+  "_release": "1.2.2",
   "_resolution": {
     "type": "version",
-    "tag": "0.0.1",
-    "commit": "075d2598b48c6b17fb6e96d5458ef24bedd13cd0"
+    "tag": "1.2.2",
+    "commit": "43addc8d5decef953e90001f60b4c8f8bb73dc19"
   },
   "_source": "git://github.com/Daniel-Hug/DDS.git",
-  "_target": "*",
+  "_target": "1.x",
   "_originalSource": "DDS"
 }

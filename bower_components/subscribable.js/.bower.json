@@ -1,7 +1,7 @@
 {
   "name": "subscribable.js",
   "main": "subscribable.js",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "authors": [
     "Daniel Hug <danielthehug@gmail.com>"
   ],
@@ -26,13 +26,13 @@
     "test",
     "tests"
   ],
-  "_release": "2.0.0",
+  "_release": "2.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "2.0.0",
-    "commit": "6c5a9c6431e7d66452a035d5d3610955c6b7681f"
+    "tag": "2.0.1",
+    "commit": "fd8aacb42264efb3213da8efd626e3cfbf7793ff"
   },
   "_source": "git://github.com/Daniel-Hug/subscribable.js.git",
-  "_target": "2.0.0",
+  "_target": "2.0.1",
   "_originalSource": "subscribable.js"
 }

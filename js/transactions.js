@@ -11,7 +11,7 @@
 
 	var transactionsTbody = $.qs('.transactions');
 	function renderTransaction(transaction) {
-		var wallet = TF.wallets.objects[transaction.wallet];
+		var wallet = TF.wallets.objectsObj[transaction.wallet];
 		var formatted = Obj.extend(transaction);
 		formatted.amount = $.formatMoney(formatted.amount);
 		formatted.relativeDate = $.daysAgo(formatted.date);
@@ -40,7 +40,7 @@
 	}
 
 	// Add transactions to table (recent first):
-	TF.dataStageTransactions = TF.transactions.render(new DDS.DOMRenderer({
+	TF.dataStageTransactions = TF.transactions.render(new DDS.DOMView({
 		renderer: renderTransaction,
 		parent: transactionsTbody,
 		sort: function (transactions) {
@@ -59,7 +59,7 @@
 	function addToWallet(walletID, addend) {
 		// Update wallet balance:
 		if (addend === 0) return;
-		var wallet = TF.wallets.objects[walletID];
+		var wallet = TF.wallets.objectsObj[walletID];
 		TF.wallets.edit(wallet, { balance: $.stripNum(wallet.balance + addend) });
 	}
 

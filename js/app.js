@@ -19,7 +19,7 @@
 	}]);
 
 	wallets.on('any', function() {
-		$.storage.set('TF_wallets', wallets.objects);
+		$.storage.set('TF_wallets', wallets.objectsObj);
 	});
 
 
@@ -32,7 +32,7 @@
 	var transactions = TF.transactions = new DDS($.storage.get('TF_transactions'));
 
 	transactions.on('any', function() {
-		$.storage.set('TF_transactions', transactions.objects);
+		$.storage.set('TF_transactions', transactions.objectsObj);
 	});
 
 
