@@ -1,4 +1,4 @@
-/* global $, TF, Obj */
+/* global $, TF, Obj, DOM */
 
 (function() {
 	'use strict';
@@ -11,28 +11,38 @@
 
 	function renderTransaction(transaction) {
 		var wallet = TF.wallets.objectsObj[transaction.wallet];
-		var formatted = Obj.extend(transaction);
-		formatted.amount = $.formatMoney(formatted.amount);
-		formatted.relativeDate = $.daysAgo(formatted.date);
-		formatted.date = $.formatDate(formatted.date);
-		formatted.wallet = wallet.name;
 
-		var tr = $.tmp.transaction(formatted);
+		// format each cell's data and give it a name
+		var rowData = {
+			title: { kid: transaction.title },
+			amount: { kid: $.formatMoney(transaction.amount) },
+			date: { kid: $.daysAgo(transaction.date), title: $.formatDate(transaction.date) },
+			wallet: { kid: wallet.name, _className: 'wallet' }
+		};
+
+		// build dom for enabled data cells
+		var dataCells = TF.settings.transactionTableCols.map(function(cellName) {
+			var cellData = rowData[cellName];
+			cellData.el = 'td';
+			return DOM.buildNode(cellData);
+		});
+
+		// build dom for row & add listeners to buttons
+		var tr = DOM.buildNode({ el: 'tr', id: 'transaction_' + transaction._id, kids: dataCells.concat([
+			{ el: 'td', _className: 'actions', kids: [
+				{ el: 'button', _className: 'edit icon-pencil', on_click: function() {
+					startEdit(transaction);
+				} },
+				{ el: 'button', _className: 'delete icon-remove', on_click: function() {
+					if (confirm('Delete?\n' + transaction.title)) {
+						TF.transactions.remove(transaction);
+					}
+				} }
+			] }
+		]) });
 
 		Obj.subscribe(wallet, function(wallet) {
 			$.qs('.wallet', tr).textContent = wallet.name;
-		});
-
-		// Edit:
-		$.on($.qs('.actions .edit', tr), 'click', function() {
-			startEdit(transaction);
-		});
-
-		// Delete:
-		$.on($.qs('.actions .delete', tr), 'click', function() {
-			if (confirm('Delete?\n' + transaction.title)) {
-				TF.transactions.remove(transaction);
-			}
 		});
 
 		return tr;

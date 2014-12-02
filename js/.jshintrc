@@ -2,7 +2,6 @@
 	"browser": true,
 	"devel": true,
 	"eqnull": true,
-	"camelcase": true,
 	"eqeqeq": true,
 	"freeze": true,
 	"immed": true,

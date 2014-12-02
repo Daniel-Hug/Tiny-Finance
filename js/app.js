@@ -9,6 +9,16 @@
 
 
 
+	/*================================*\
+	)  Get settings from localStorage  (
+	\*================================*/
+
+	TF.settings = $.storage.get('TF_settings') || {
+		transactionTableCols: ['title', 'amount', 'date', 'wallet']
+	};
+
+
+
 	/*=====================*\
 	)  Setup wallets model  (
 	\*=====================*/

@@ -129,18 +129,7 @@
 						<td class="total" colspan="4">$0</td>
 					</tr>
 				</tfoot>
-				<tbody class="transactions">
-					<tr data-tmp="transaction" id="transaction_{{_id}}">
-						<td>{{title}}</td>
-						<td>{{amount}}</td>
-						<td title="{{date}}">{{relativeDate}}</td>
-						<td class="wallet">{{wallet}}</td>
-						<td class="actions">
-							<button class="edit icon-pencil"></button><!--
-						 --><button class="delete icon-remove"></button>
-						</td>
-					</tr>
-				</tbody>
+				<tbody class="transactions"></tbody>
 			</table>
 		</div>
 
@@ -179,16 +168,23 @@
 
 
 	<!-- required modules -->
-	<script>
-	if (!('classList' in document.body))
-		document.write('<' + 'script src="js/polyfills/classList.js"><' + '/script>');
-	</script>
-	<script src="bower_components/tabbed-panels/panels.js"></script>
 
-	<!-- DDS -->
-		<script src="bower_components/object-subscribe/obj.js"></script>
-		<script src="bower_components/subscribable.js/subscribable.js"></script>
-	<script src="bower_components/DDS/DDS.js"></script>
+		<!-- polyfills -->
+		<script>
+		if (!('classList' in document.body))
+			document.write('<' + 'script src="js/polyfills/classList.js"><' + '/script>');
+		</script>
+
+		<!-- tabbed panels -->
+		<script src="bower_components/tabbed-panels/panels.js"></script>
+
+		<!-- DDS -->
+			<script src="bower_components/object-subscribe/obj.js"></script>
+			<script src="bower_components/subscribable.js/subscribable.js"></script>
+		<script src="bower_components/DDS/DDS.js"></script>
+
+		<!-- DOM builder -->
+		<script src="bower_components/DOM-Builder/DOM-Builder.js"></script>
 
 
 	<!-- helper functions -->

@@ -1,0 +1,14 @@
+{
+  "name": "DOM-Builder",
+  "homepage": "https://github.com/Daniel-Hug/DOM-Builder",
+  "_release": "3d8763cac0",
+  "_resolution": {
+    "type": "branch",
+    "branch": "gh-pages",
+    "commit": "3d8763cac0026ed1e06c724d7a4a91f52b52ce35"
+  },
+  "_source": "git://github.com/Daniel-Hug/DOM-Builder.git",
+  "_target": "gh-pages",
+  "_originalSource": "Daniel-Hug/DOM-Builder",
+  "_direct": true
+}
