@@ -1,4 +1,4 @@
-/* global DDS, $, TF */
+/* global $, TF */
 
 (function() {
 	'use strict';
@@ -25,7 +25,7 @@
 		// Edit wallet name:
 		$.on(editForm, 'submit', function(event) {
 			event.preventDefault();
-			walletListRenderer.edit(wallet, {name: this.name.value});
+			TF.walletListView.edit(wallet, {name: this.name.value});
 		});
 
 		// Remove wallet:

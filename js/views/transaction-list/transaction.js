@@ -1,4 +1,4 @@
-/* global DDS, $, TF, Obj */
+/* global $, TF, Obj */
 
 (function() {
 	'use strict';

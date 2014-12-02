@@ -10,7 +10,7 @@
 	\*=========================*/
 
 	var walletTbody = $.qs('.wallet-table tbody');
-	var walletListView = TF.wallets.render(new DDS.DOMView({
+	TF.walletListView = TF.wallets.render(new DDS.DOMView({
 		renderer: TF.renderers.wallet,
 		parent: walletTbody
 	}));
@@ -23,7 +23,7 @@
 
 	TF.moneyTotal = 0;
 	var fullTotalEl = $.qs('.wallet-table .total');
-	walletListView.on('any', function() {
+	TF.walletListView.on('any', function() {
 		var total = 0;
 		this.objects.forEach(function(wallet) {
 			total += wallet.balance;

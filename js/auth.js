@@ -60,7 +60,7 @@
 			window.user = user;
 			window.fbUser = fbUsers.child(user.email.replace('.', '&'));
 			window.fbUser.update({user: user});
-			console.log('Welcome ' + user.thirdPartyUserData.given_name + "! You've been logged in.");
+			console.log('Welcome ' + user.thirdPartyUserData.given_name + '! You\'ve been logged in.');
 
 			// Show logged-in controls:
 			userDrop.textContent = user.displayName;

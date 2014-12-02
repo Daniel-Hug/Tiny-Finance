@@ -1,4 +1,4 @@
-/* global DDS, $, TF, Obj */
+/* global $, TF */
 
 (function() {
 	'use strict';
@@ -10,7 +10,7 @@
 		/*jshint validthis: true */
 		TF.filteredWalletMap[this.value] = this.checked;
 		TF.filterTransactions();
-	}
+	};
 
 
 	TF.filterTransactions = $.debounce(function() {

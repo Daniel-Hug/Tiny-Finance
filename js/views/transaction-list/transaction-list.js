@@ -1,4 +1,4 @@
-/* global DDS, $, TF, Obj */
+/* global DDS, $, TF */
 
 (function() {
 	'use strict';
@@ -94,7 +94,7 @@
 		}
 
 		// update total
-		TF.filteredMoneyTotal = filteredTotal
+		TF.filteredMoneyTotal = filteredTotal;
 		filteredTotalEl.textContent = $.formatMoney(TF.filteredMoneyTotal);
 	}
 
