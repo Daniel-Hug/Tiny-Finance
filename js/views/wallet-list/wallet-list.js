@@ -24,7 +24,6 @@
 	TF.moneyTotal = 0;
 	var fullTotalEl = $.qs('.wallet-table .total');
 	function updateWalletTotal() {
-		console.log('wallet total update called');
 		var total = 0;
 		TF.wallets.objects.forEach(function(wallet) {
 			total += wallet.balance;
