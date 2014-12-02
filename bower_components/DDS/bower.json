@@ -1,7 +1,7 @@
 {
   "name": "DDS",
   "main": "DDS.js",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "homepage": "https://github.com/Daniel-Hug/DDS",
   "authors": [
     "Daniel Hug <danielthehug@gmail.com>"

@@ -48,7 +48,7 @@
 
 		add: function(obj, _id) {
 			// prep passed object with an _id prop (each object gets a unique ID)
-			if (obj._id === undefined) {
+			if (typeof obj._id !== 'string') {
 				obj._id = _id || uid();
 			}
 
@@ -153,6 +153,8 @@
 			this.objects = this.getModel();
 			if (this === DDSViewNotToUpdate) return;
 			var isEdit = action === 'edit';
+			var shouldRemove;
+			var shouldAdd;
 
 			// On edit, only update view if a required key changed
 			objDiff:
@@ -166,16 +168,16 @@
 
 			// determine wether view will need to perform an 'add' and/or a 'remove' operation
 			if (isEdit || action === 'remove') {
-				var shouldRemove = true;
+				shouldRemove = true;
 			}
 			if ((isEdit || action === 'add') && this.filterer(newObj)) {
-				var shouldAdd = true;
+				shouldAdd = true;
 			}
 
 			// perform any needed add or remove operations on view
 			// use view.refresh if view doesn't have a needed remove/add method
 			if (shouldRemove && !this.remove || shouldAdd && !this.add) {
-				this.refresh()
+				this.refresh();
 			} else {
 				if (shouldRemove) {
 					this.remove(newObj._id);

@@ -14,13 +14,13 @@
 	\*=====================*/
 
 	// Grab wallets from localStorage (recent last):
-	var wallets = TF.wallets = new DDS($.storage.get('TF_wallets') || [{
+	TF.wallets = new DDS($.storage.get('TF_wallets') || [{
 		name: 'wallet',
 		balance: 0
 	}]);
 
-	wallets.on('any', function() {
-		$.storage.set('TF_wallets', wallets.objectsObj);
+	TF.wallets.on('any', function() {
+		$.storage.set('TF_wallets', TF.wallets.objectsObj);
 	});
 
 
@@ -30,10 +30,10 @@
 	\*==========================*/
 
 	// Grab transactions from localStorage (recent last):
-	var transactions = TF.transactions = new DDS($.storage.get('TF_transactions'));
+	TF.transactions = new DDS($.storage.get('TF_transactions'));
 
-	transactions.on('any', function() {
-		$.storage.set('TF_transactions', transactions.objectsObj);
+	TF.transactions.on('any', function() {
+		$.storage.set('TF_transactions', TF.transactions.objectsObj);
 	});
 
 
