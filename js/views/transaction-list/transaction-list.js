@@ -22,10 +22,11 @@
 
 
 
-	/*========================================================*\
-	)  Render wallets in "Filter transactions by wallet" list  (
-	\*========================================================*/
+	/*==================================*\
+	)  render "Filter by wallet" module  (
+	\*==================================*/
 
+	// Render wallets in "Filter transactions by wallet" list
 	var walletFiltersParent = $.qs('.filter-list');
 	TF.wallets.render(new DDS.DOMView({
 		renderer: TF.renderers.walletFilter,
@@ -34,6 +35,15 @@
 			return array;
 		}
 	}));
+
+	// enable "Toggle Selected" button:
+	$.on($.qs('.toggle-check'), 'click', function() {
+		$.each(this.nextElementSibling.children, function (li) {
+			var checkbox = li.firstChild.firstChild;
+			checkbox.checked = !checkbox.checked;
+			TF.walletFilterChange.call(checkbox);
+		});
+	});
 
 
 
@@ -71,30 +81,26 @@
 
 
 
-	/*=================================*\
-	)  Transaction filtering by wallet  (
-	\*=================================*/
+	/*===================================*\
+	)  keep filtered money total updated  (
+	\*===================================*/
 
-	// "Toggle Selected" button:
-	$.each($.qsa('.toggle-check'), function (toggleBtn) {
-		$.on(toggleBtn, 'click', function() {
-			$.each(this.nextElementSibling.children, function (li) {
-				var checkbox = li.firstChild.firstChild;
-				checkbox.checked = !checkbox.checked;
-				TF.walletFilterChange.call(checkbox);
-			});
-		});
-	});
-
-	// when transactions filter changes, recalculate total:
 	var filteredTotalEl = $.qs('.transactions-table .total');
-	TF.dataStageTransactions.on('filter', function() {
+	function updateTransactionSum() {
+		// sum the balances of the checked wallet-filters
 		var filteredTotal = 0;
-		for (var walletID in TF.filteredWalletMap) {
+		for (var walletID in TF.wallets.objectsObj) {
 			if (TF.filteredWalletMap[walletID]) filteredTotal += TF.wallets.objectsObj[walletID].balance;
 		}
-		filteredTotalEl.textContent = $.formatMoney(TF.filteredMoneyTotal = filteredTotal);
-	});
+
+		// update total
+		TF.filteredMoneyTotal = filteredTotal
+		filteredTotalEl.textContent = $.formatMoney(TF.filteredMoneyTotal);
+	}
+
+	// update now and whenever a wallet changes:
+	updateTransactionSum();
+	TF.wallets.on('any', updateTransactionSum);
 
 
 
