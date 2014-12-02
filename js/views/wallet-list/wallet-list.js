@@ -23,14 +23,17 @@
 
 	TF.moneyTotal = 0;
 	var fullTotalEl = $.qs('.wallet-table .total');
-	TF.walletListView.on('any', function() {
+	function updateWalletTotal() {
+		console.log('wallet total update called');
 		var total = 0;
-		this.objects.forEach(function(wallet) {
+		TF.wallets.objects.forEach(function(wallet) {
 			total += wallet.balance;
 		});
 		TF.moneyTotal = total;
 		fullTotalEl.textContent = $.formatMoney(TF.moneyTotal);
-	});
+	}
+	updateWalletTotal();
+	TF.walletListView.on('any', updateWalletTotal);
 
 
 
