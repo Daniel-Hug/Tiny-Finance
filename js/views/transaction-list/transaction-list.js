@@ -9,10 +9,9 @@
 	)  Render transactions to table (recent first):  (
 	\*==============================================*/
 
-	var transactionsTbody = $.qs('.transactions');
 	TF.views.dataStageTransactions = TF.transactions.render(new DDS.DOMView({
 		renderer: TF.renderers.transaction,
-		parent: transactionsTbody,
+		parent: $.qs('.transactions'),
 		sort: function(transactions) {
 			return transactions.sort(function(a, b) {
 				return b.date - a.date;

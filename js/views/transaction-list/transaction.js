@@ -57,9 +57,9 @@
 
 	var transactionEditForm = $.qs('form.transaction-edit');
 
-	TF.dataStage = $.qs('.data-stage');
-	var editTab = $.qs('.edit-tab', TF.dataStage);
-	var tableTab = $.qs('.table-tab', TF.dataStage);
+	var dataStage = $.qs('.data-stage');
+	var editTab = $.qs('.edit-tab', dataStage);
+	var tableTab = $.qs('.table-tab', dataStage);
 	$.on($.qs('.close-icon', editTab), 'click', function(event) {
 		event.stopPropagation();
 		endEdit();

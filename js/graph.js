@@ -78,7 +78,6 @@
 
 		return data;
 	}
-	TF.formatDaysForTable = formatDaysForTable;
 
 	var drawGraph = $.debounce(function () {
 		var dateRange = graphData.getColumnRange(0);
@@ -107,18 +106,18 @@
 	}, 5);
 
 
-	TF.updateGraph = function() {
+	function updateGraph() {
 		var transactions = TF.views.dataStageTransactions.objects.reverse(); // ordered in ascending order by ts (recent last)
 		graphData = formatDaysForTable(transactions);
 		drawGraph();
-	};
+	}
 
 	google.setOnLoadCallback(function() {
 		googLn = new google.visualization.LineChart(graphEl);
 
-		TF.updateGraph();
+		updateGraph();
 		$.on(window, 'resize', drawGraph);
 	});
 
-	TF.views.dataStageTransactions.on('any', TF.updateGraph);
+	TF.views.dataStageTransactions.on('any', updateGraph);
 })();
