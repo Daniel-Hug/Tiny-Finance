@@ -3,19 +3,9 @@
 (function() {
 	'use strict';
 
-	TF.filteredWalletMap = TF.filteredWalletMap || {};
-
-	// Keep TF.filteredWalletMap updated when checkboxes are checked/unchecked
-	TF.walletFilterChange = function() {
-		/*jshint validthis: true */
-		TF.filteredWalletMap[this.value] = this.checked;
-		TF.filterTransactions();
-	};
-
-
-	TF.filterTransactions = $.debounce(function() {
-		TF.dataStageTransactions.filter(function(transaction) {
-			return TF.filteredWalletMap[transaction.wallet];
+	var filterRefresh = $.debounce(function() {
+		TF.views.dataStageTransactions.filter(function(transaction) {
+			return TF.views.walletFilters.map[transaction.wallet];
 		});
 	}, 10);
 
@@ -27,16 +17,20 @@
 
 		checkbox.setAttribute('type', 'checkbox');
 		checkbox.value = wallet._id;
-		if (TF.filteredWalletMap[wallet._id] === undefined) {
-			TF.filteredWalletMap[wallet._id] = true;
+		var map = TF.views.walletFilters.map;
+		if (map[wallet._id] === undefined) {
+			map[wallet._id] = true;
 		}
-		checkbox.checked = TF.filteredWalletMap[wallet._id];
+		checkbox.checked = map[wallet._id];
 		label.textContent = ' ' + wallet.name;
 		$.prependAInB(checkbox, label);
 		li.appendChild(label);
 
 		// Filter transactions when a checkbox is clicked:
-		$.on(checkbox, 'change', TF.walletFilterChange);
+		$.on(checkbox, 'change', function() {
+			TF.views.walletFilters.map[this.value] = this.checked;
+			filterRefresh();
+		});
 
 		return li;
 	}

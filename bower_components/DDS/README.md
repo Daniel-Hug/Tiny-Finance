@@ -11,7 +11,7 @@ First, configure your db and DDS model to keep each other updated:
 ```js
 var tasks = new DDS(JSON.parse(localStorage.getItem('tasks')) || []);
 
-var tasks.on('any', function() {
+tasks.on('any', function() {
 	localStorage.setItem('tasks', JSON.stringify(window.tasks.objects));
 });
 ```

@@ -10,10 +10,10 @@
 	\*==============================================*/
 
 	var transactionsTbody = $.qs('.transactions');
-	TF.dataStageTransactions = TF.transactions.render(new DDS.DOMView({
+	TF.views.dataStageTransactions = TF.transactions.render(new DDS.DOMView({
 		renderer: TF.renderers.transaction,
 		parent: transactionsTbody,
-		sort: function (transactions) {
+		sort: function(transactions) {
 			return transactions.sort(function(a, b) {
 				return b.date - a.date;
 			});
@@ -27,14 +27,15 @@
 	\*==================================*/
 
 	// Render wallets in "Filter transactions by wallet" list
-	var walletFiltersParent = $.qs('.filter-list');
-	TF.wallets.render(new DDS.DOMView({
+	TF.views.walletFilters = new DDS.DOMView({
 		renderer: TF.renderers.walletFilter,
-		parent: walletFiltersParent,
+		parent: $.qs('.filter-list'),
 		sort: function(array) {
 			return array;
 		}
-	}));
+	});
+	TF.views.walletFilters.map = {};
+	TF.wallets.render(TF.views.walletFilters);
 
 	// enable "Toggle Selected" button:
 	$.on($.qs('.toggle-check'), 'click', function() {
@@ -90,17 +91,17 @@
 		// sum the balances of the checked wallet-filters
 		var filteredTotal = 0;
 		for (var walletID in TF.wallets.objectsObj) {
-			if (TF.filteredWalletMap[walletID]) filteredTotal += TF.wallets.objectsObj[walletID].balance;
+			if (TF.views.walletFilters.map[walletID]) filteredTotal += TF.wallets.objectsObj[walletID].balance;
 		}
 
 		// update total
-		TF.filteredMoneyTotal = filteredTotal;
-		filteredTotalEl.textContent = $.formatMoney(TF.filteredMoneyTotal);
+		filteredTotalEl.textContent = $.formatMoney(filteredTotal);
 	}
 
 	// update now and whenever a wallet changes:
 	updateTransactionSum();
 	TF.wallets.on('any', updateTransactionSum);
+	TF.views.dataStageTransactions.on('filter', updateTransactionSum);
 
 
 

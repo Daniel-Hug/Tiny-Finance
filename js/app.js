@@ -5,6 +5,7 @@
 
 	// Setup app global:
 	var TF = window.TF = {};
+	TF.views = {};
 	TF.renderers = {};
 
 

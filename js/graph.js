@@ -108,7 +108,7 @@
 
 
 	TF.updateGraph = function() {
-		var transactions = TF.dataStageTransactions.objects.reverse(); // ordered in ascending order by ts (recent last)
+		var transactions = TF.views.dataStageTransactions.objects.reverse(); // ordered in ascending order by ts (recent last)
 		graphData = formatDaysForTable(transactions);
 		drawGraph();
 	};
@@ -120,5 +120,5 @@
 		$.on(window, 'resize', drawGraph);
 	});
 
-	TF.dataStageTransactions.on('any', TF.updateGraph);
+	TF.views.dataStageTransactions.on('any', TF.updateGraph);
 })();

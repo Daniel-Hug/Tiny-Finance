@@ -9,10 +9,9 @@
 	)  render main wallet list  (
 	\*=========================*/
 
-	var walletTbody = $.qs('.wallet-table tbody');
-	TF.walletListView = TF.wallets.render(new DDS.DOMView({
+	TF.views.walletList = TF.wallets.render(new DDS.DOMView({
 		renderer: TF.renderers.wallet,
-		parent: walletTbody
+		parent: $.qs('.wallet-table tbody')
 	}));
 
 
@@ -32,7 +31,7 @@
 		fullTotalEl.textContent = $.formatMoney(TF.moneyTotal);
 	}
 	updateWalletTotal();
-	TF.walletListView.on('any', updateWalletTotal);
+	TF.views.walletList.on('any', updateWalletTotal);
 
 
 
