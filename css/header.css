@@ -1,0 +1,63 @@
+/*
+	header / sign in area
+*/
+
+/* show / hide els based on logged in / out state */
+body .logged-out,
+body .logged-in {
+	display: none;
+}
+
+body.logged-in .logged-in,
+body.logged-out .logged-out {
+	display: block;
+}
+
+.drop-tri:after {
+	content: ' ▼';
+	vertical-align: middle;
+}
+
+
+
+.header {
+	position: relative;
+	vertical-align: middle;
+}
+
+
+/* branding at the top */
+.brand {
+	margin-top: 0;
+}
+
+
+/* "Sign In with Google" button */
+.googLoginBtn {
+	position: absolute;
+	right: 0;
+	top: 1.2em;
+	height: 2.4em;
+	border: none;
+	color: white;
+	background: hsl(7, 71%, 55%);
+	border-radius: 5px;
+	box-shadow: none !important;
+	text-shadow: none;
+	cursor: pointer;
+}
+
+.googLoginBtn:hover {
+	background: hsl(7, 78%, 56%);
+}
+
+.user-drop {
+	position: absolute;
+	right: 0;
+	top: 0.64em;
+	margin-top: 0;
+}
+
+.user-drop .panel {
+	text-align: center;
+}
