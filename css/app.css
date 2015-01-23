@@ -139,68 +139,6 @@ label.field-row-top select {
 
 
 
-
-/* wallet list */
-
-.tabbed-panels > .panel.wallets-panel {
-	padding: 16px 0 0;
-}
-
-.wallet-form {
-	padding: 0 1em;
-}
-
-.wallet-table {
-	width: 100%;
-	margin-top: 1em;
-}
-
-.wallet-table tr {
-	height: 50px;
-}
-
-.wallet-table tr {
-	border-top: 1px solid #ccc;
-}
-
-.wallet-action-col {
-	padding: 0 1em;
-	width: 42px;
-}
-
-.wallet-amount-col {
-	padding-right: 1em;
-}
-
-.wallet-table form {
-	display: inline-block;
-}
-
-.wallet-table .wallet-name-edit-field {
-	width: 224px;
-	border-radius: 4px;
-	margin-right: 1em;
-}
-
-.wallet-table .wallet-name-edit-field[disabled] {
-	background: none;
-	border-color: transparent;
-	cursor: text;
-	border-left-width: 0;
-	padding-left: 0;
-}
-
-.wallet-table form .wallet-save-btn[disabled] {
-	visibility: hidden;
-}
-
-.total-label {
-	text-align: right;
-	padding-right: 1em;
-}
-
-
-
 /*
 	Data Stage (transaction table, graph, transaction edit form)
 */

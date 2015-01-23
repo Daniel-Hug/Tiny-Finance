@@ -1,0 +1,121 @@
+/*
+	Data Stage (transaction table, graph, transaction edit form)
+*/
+
+.data-stage .tabs {
+	text-align: right;
+}
+
+
+/* tabs for filtering transactions in data-stage */
+.filters {
+	float: left;
+	text-align: left;
+}
+
+.filters .tab {
+	vertical-align: middle;
+}
+
+.filter-list {
+	margin-top: 1em;
+}
+
+
+/* close icon for edit tab */
+.close-icon {
+	display: inline-block;
+	border: 0;
+	padding: 0;
+	width: 16px;
+	height: 16px;
+	font-size: 14px;
+	line-height: 16px;
+	text-align: center;
+	border-radius: 50%;
+	color: white;
+	background: black;
+	box-shadow: none;
+	text-shadow: none;
+	cursor: pointer;
+	opacity: .25;
+}
+
+.close-icon:hover {
+	opacity: .5;
+}
+
+
+
+
+/*
+	transactions table
+*/
+
+.data-stage .table {
+	padding: 0;
+}
+
+.transactions-table {
+	width: 100%;
+}
+
+.transactions-table tbody tr {
+	border-bottom: 1px solid #ccc;
+}
+
+.transactions-table td,
+.transactions-table th {
+	padding: 8px;
+	white-space: nowrap;
+}
+
+.transactions-table th {
+	font-weight: normal;
+	font-size: 1.2em;
+}
+
+.transactions-table td:first-child {
+	overflow: hidden;
+	white-space: normal;
+	text-overflow: ellipsis;
+}
+
+
+
+
+/* transaction action buttons */
+.transactions-table .actions {
+	width: 16px;
+	padding: 0;
+}
+
+.transactions-table .actions button {
+	height: 100%;
+	border: 0;
+	padding: 0 .4em;
+	background: none;
+	box-shadow: none;
+	text-shadow: none;
+	opacity: 0.7;
+}
+
+.transactions-table .actions button:hover {
+	opacity: 1;
+}
+
+
+/* graph */
+.data-stage .graph-wrapper {
+	height: 0;
+	padding-bottom: 80%;
+	position: relative;
+}
+
+.data-stage .graph {
+	position: absolute !important;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
