@@ -117,6 +117,15 @@
 		formData.amount = +formData.amount;
 		formData.date = formData.date ? $.parseDashDate(formData.date).getTime() : $.startOfDay();
 
+		// clear title and amount fields
+		this.title.value = '';
+		this.amount.value = '';
+
+		// reset date field to today
+		this.date.value = $.toDashDate(Date.now());
+
+		// wallet field is kept same as last transaction
+
 		// Add the new transaction to the transactions 'array':
 		TF.transactions.add(formData);
 	});
