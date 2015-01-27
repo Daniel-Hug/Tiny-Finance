@@ -48,6 +48,8 @@
 			name: this.title.value,
 			balance: 0
 		});
+
+		this.title.value = '';
 	});
 
 })();
