@@ -1,15 +1,14 @@
 {
   "name": "tabbed-panels",
   "homepage": "https://github.com/Daniel-Hug/tabbed-panels",
-  "version": "1.0.0",
-  "_release": "1.0.0",
+  "version": "1.1.1",
+  "_release": "1.1.1",
   "_resolution": {
     "type": "version",
-    "tag": "1.0.0",
-    "commit": "4b9504716fa8feb1d3c8c7aebe69b3e7bb68755a"
+    "tag": "1.1.1",
+    "commit": "5bd37f1ee07380a3bc7a8df450d1b6e8a3f1e52d"
   },
   "_source": "git://github.com/Daniel-Hug/tabbed-panels.git",
-  "_target": "~1.0.0",
-  "_originalSource": "tabbed-panels",
-  "_direct": true
+  "_target": "1.x",
+  "_originalSource": "tabbed-panels"
 }
