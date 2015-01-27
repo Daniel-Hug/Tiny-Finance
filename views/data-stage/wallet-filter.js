@@ -9,6 +9,11 @@
 		});
 	}, 10);
 
+	TF.walletFilterChange = function() {
+		TF.views.walletFilters.map[this.value] = this.checked;
+		filterRefresh();
+	};
+
 	function renderWalletFilter(wallet) {
 		// Create the checkbox list item:
 		var li = document.createElement('li');
@@ -27,10 +32,7 @@
 		li.appendChild(label);
 
 		// Filter transactions when a checkbox is clicked:
-		$.on(checkbox, 'change', function() {
-			TF.views.walletFilters.map[this.value] = this.checked;
-			filterRefresh();
-		});
+		$.on(checkbox, 'change', TF.walletFilterChange);
 
 		return li;
 	}
